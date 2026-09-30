@@ -2249,3 +2249,84 @@ html[dir="rtl"] .navigation-drawer {
     aspect-ratio: 590 / 460;
   }
 }
+
+/* Bakery editorial uses the shared storefront shell and catalog components. */
+.storefront-preset-hero[data-composition="editorial-product"] {
+  border: 0;
+  border-radius: 0;
+  background: #f7f2e9;
+  color: #30271f;
+}
+.storefront-preset-hero[data-composition="editorial-product"] .storefront-preset-hero-copy {
+  background: #f7f2e9;
+  padding: clamp(28px, 4vw, 64px);
+  gap: 28px;
+}
+.storefront-preset-hero-copy .bakery-eyebrow {
+  margin: 0 0 28px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: #745940;
+}
+.storefront-preset-hero-copy .bakery-description {
+  max-width: 32ch;
+  margin-top: 24px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.storefront-preset-hero[data-composition="editorial-product"] h1 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(38px, 4.6vw, 68px);
+  letter-spacing: -.045em;
+  line-height: 1.04;
+}
+@media (min-width: 1024px) {
+  .storefront-preset-hero[data-composition="editorial-product"] {
+    grid-template-columns: 46% 54%;
+    min-height: 530px;
+  }
+  .storefront-preset-hero[data-composition="editorial-product"] .storefront-preset-hero-media {
+    position: relative;
+    inset: auto;
+    grid-column: 2;
+    grid-row: 1;
+    border-radius: 0;
+  }
+  .storefront-preset-hero[data-composition="editorial-product"] .storefront-preset-hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    margin: 0;
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+@media (max-width: 1023px) {
+  .storefront-preset-hero[data-composition="editorial-product"] .storefront-preset-hero-media {
+    height: 280px;
+    border-radius: 0;
+  }
+}
+.storefront-shell[data-preset="bakery-editorial"] {
+  --color-brand-primary: #6b422b;
+  --color-brand-primary-hover: #4a2e1d;
+  --color-border-brand: #6b422b;
+  --color-brand-subtle: #f1e8da;
+  --color-surface-inverse: #fdfaf5;
+  --color-text-on-inverse: #30271f;
+  --color-accent: #6b422b;
+  --color-surface-page: #fdfaf5;
+  --color-text-secondary: #6a5b4e;
+  --color-border-default: #ded5c8;
+}
+.storefront-shell[data-preset="bakery-editorial"] .storefront-header {
+  border-bottom: 1px solid #e5ddd1;
+}
+.storefront-shell[data-preset="bakery-editorial"] .storefront-preset-hero-copy .primary-button {
+  width: auto;
+  min-width: 170px;
+  border-radius: 4px;
+  padding-inline: 28px;
+}

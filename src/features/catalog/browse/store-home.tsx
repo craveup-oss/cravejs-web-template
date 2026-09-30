@@ -113,14 +113,7 @@ function HomeLayout({ data }: { data: StoreHomeData }) {
         <ProductGrid
           eagerCount={2}
           eagerFetchPriority="low"
-          items={selectItems(data.featuredItems, [
-            "double-smash-burger",
-            "crinkle-fries",
-            "chocolate-malt",
-            "crispy-chicken-sandwich",
-            "mushroom-burger",
-            "side-salad",
-          ])}
+          items={data.featuredItems.slice(0, 6)}
         />
       </section>
       <section className="full-menu-preview" id="full-menu" aria-labelledby="full-menu-title">
@@ -326,7 +319,13 @@ function StorefrontPresetHero({
       </div>
       <div className="storefront-preset-hero-copy">
         <div>
-          <h1>{data.location.name}</h1>
+          {visualPreset.id === "bakery-editorial" ? (
+            <>
+              <p className="bakery-eyebrow">LECLERC · NEIGHBORHOOD BAKERY</p>
+              <h1>A little butter.<br />A better morning.</h1>
+              <p className="bakery-description">Slow-fermented dough. Golden, shattering layers. Your daily ritual, fresh from our oven.</p>
+            </>
+          ) : <h1>{data.location.name}</h1>}
           {data.location.statusLabel || data.location.addressLabel ? (
             <p>
               {data.location.statusLabel ? data.location.statusLabel : null}

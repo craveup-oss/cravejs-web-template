@@ -62,10 +62,13 @@ Use a theme as the starting point, then change documented theme inputs, public f
 merchant content and exported composition slots. A visual concept does not need its own copy of the
 SDK integration, cart or checkout code.
 
-### Placeholder imagery
+### Bakery preview and imagery
 
-This public template ships neutral, repository-owned SVG placeholders instead of licensed
-photography. Every shipped asset is recorded with its SHA-256 digest in
+The Bakery Editorial preset includes AI-generated bakery photography and fictional
+Leclerc Bakery sample content. Run the fixture server, then open
+`/design-system-preview?preset=bakery-editorial&controls=0` to explore the responsive
+visual preview. Ordering tests continue to use the canonical fixture menu. Other
+presets ship repository-authored SVG placeholders. Every shipped asset is recorded with its SHA-256 digest in
 [`distribution/asset-ownership.json`](distribution/asset-ownership.json), and the release gate rejects
 any image whose rights are not confirmed. Replace the placeholders with your own photography.
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "note": "Neutral assets generated from repository-owned SVG primitives for the public Crave.js web template. Approval is bound to exact bytes.",
+  "note": "Repository-authored placeholders and AI-generated bakery demo photography. Approval is bound to exact bytes; see public/assets/template/BAKERY-PHOTOGRAPHY.md.",
   "statuses": {
     "crave-owned": "Programmatically authored for this public template and owned by Crave Up, Inc.",
     "licensed": "Third-party work with recorded source and licence.",
@@ -20,13 +20,6 @@
       "source": "scripts/create-public-mirror-snapshot.mjs",
       "license": "MIT",
       "sha256": "494455db9457dd394eeb8d95621698ed85d3fb22108bc188b8e7eaac5cf221ef"
-    },
-    {
-      "path": "public/assets/template/bakery-editorial-hero.svg",
-      "status": "crave-owned",
-      "source": "scripts/create-public-mirror-snapshot.mjs",
-      "license": "MIT",
-      "sha256": "7610c87e6b02eb0d2e846afa7ca19df84e55c906531806b36391ecbd9d51b31e"
     },
     {
       "path": "public/assets/template/noodle-house-hero.svg",
@@ -55,6 +48,27 @@
       "source": "scripts/create-public-mirror-snapshot.mjs",
       "license": "MIT",
       "sha256": "ff78851a1be410ebfb6dae247eaefe7c93c2ce249be1c8c5b8a83be34a800338"
+    },
+    {
+      "path": "public/assets/template/bakery-croissant.webp",
+      "status": "crave-owned",
+      "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
+      "license": "MIT",
+      "sha256": "311e04cde1388c7f8ea31f17a86430be568fdc80e5712abbeccbb5ba4b1d68b8"
+    },
+    {
+      "path": "public/assets/template/bakery-editorial-hero.webp",
+      "status": "crave-owned",
+      "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
+      "license": "MIT",
+      "sha256": "5c370c14cacfb06e1cbca3a4ebd7299272411838e8f88a0a441dfa53f37443fe"
+    },
+    {
+      "path": "public/assets/template/bakery-pain-au-chocolat.webp",
+      "status": "crave-owned",
+      "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
+      "license": "MIT",
+      "sha256": "efd1ce36f7c0882c78df77598003d096b439e1a3c1581023889ee9094332c5a7"
     }
   ]
 }

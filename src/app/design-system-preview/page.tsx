@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { bakeryPreviewData } from "@/presets/bakery-preview-data";
 import { notFound } from "next/navigation";
 
 import { StorefrontHeader } from "@/components/shell/storefront-header";
@@ -103,7 +104,9 @@ export default async function DesignSystemPreview({ searchParams }: PreviewPageP
   const theme = themeIds.includes(query.theme as ThemeId)
     ? (query.theme as ThemeId)
     : visualPreset?.defaultThemeId ?? "base";
-  const data = await loadDemoStoreHomeData("demo");
+  const data = visualPreset?.id === "bakery-editorial"
+    ? bakeryPreviewData
+    : await loadDemoStoreHomeData("demo");
   const itemState = itemStates.includes(query.itemState as ItemPreviewState)
     ? (query.itemState as ItemPreviewState)
     : undefined;

@@ -176,6 +176,7 @@ const assetOrigins = readConfiguredAssetOrigins(
 const apiOrigin = process.env.NEXT_PUBLIC_CRAVEUP_API_URL;
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   images: {
     remotePatterns: assetOrigins.map((origin) => {
       const url = new URL(origin);
