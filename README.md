@@ -1,22 +1,74 @@
-# Crave.js Restaurant Storefront
+# Crave.js Web Storefront
 
-Restaurant ordering should look like your restaurant—not a generic checkout template.
+A responsive Next.js storefront for restaurant ordering. Make the menu, photography,
+and guest experience your own, with a shared commerce core for carts, fulfillment,
+and hosted checkout.
 
-Crave.js gives restaurant teams a themeable Next.js foundation for branded online ordering: menus,
-nested modifiers, carts, pickup, delivery, fixture-backed tableside and in-room service previews,
-hosted checkout handoff, customer accounts, orders and capability-gated loyalty. The shared core uses
-the public Crave Storefront SDK directly, with no browser API key and no payment-provider code copied
-into the app.
+**[Explore the storefront](https://developer.craveup.com/templates#cravejs-web-template)**
+· [Run it locally](#run-the-bakery-preview)
+· [Documentation](https://docs.craveup.com)
+· [Storefront API contract](docs/contracts/STOREFRONT-API.md)
 
-**One restaurant-commerce core. Six visual directions. Two ways to run it.**
+Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript · MIT
 
-Next.js 16 · React 19 · App Router · Tailwind v4 · TypeScript · pnpm · MIT
+## See the storefront
 
-> [!IMPORTANT]
-> This repository is a generated public snapshot. It is a release candidate: the local fixture
-> experience and both runtime profiles work today, while the public `crave` CLI generator and the
-> generated-project upgrade path have not shipped yet. Clone it to read, run and adapt the template;
-> do not treat a clone as a generated project.
+Meet **Leclerc Bakery**, the included Bakery Editorial visual preview. These are
+captures of the running template at desktop and mobile web sizes.
+
+<table>
+  <tr>
+    <th>Desktop</th>
+    <th>Mobile web</th>
+  </tr>
+  <tr>
+    <td valign="top"><a href="docs/images/storefront-desktop.webp"><img src="docs/images/storefront-desktop.webp" alt="Leclerc Bakery desktop storefront with a split editorial hero, golden pastries, and sample menu" width="660" /></a></td>
+    <td valign="top"><a href="docs/images/storefront-mobile.webp"><img src="docs/images/storefront-mobile.webp" alt="The same bakery storefront on mobile web, with stacked photography and content" width="190" /></a></td>
+  </tr>
+</table>
+
+Try the **Desktop / Mobile** toggle in the [live showcase](https://developer.craveup.com/templates#cravejs-web-template),
+or select either screenshot to view it at full size.
+
+Leclerc Bakery and its menu are fictional; the food photography is AI-generated.
+This preset demonstrates the responsive design. The separate ordering fixtures let
+you explore menus, modifiers, carts, pickup, delivery, and checkout handoff without
+credentials or live orders.
+
+> **Preview availability:** the pictured bakery is published on
+> [`feature/bakery-photo-preview`](https://github.com/craveup-oss/cravejs-web-template/tree/feature/bakery-photo-preview).
+> Its merge into `main` is pending the required review in
+> [PR #1](https://github.com/craveup-oss/cravejs-web-template/pull/1).
+> The quickstart below selects that branch so you get the design shown here.
+
+## Run the bakery preview
+
+Use **Node.js 24** and **pnpm 10.33.2**. No Crave credentials are needed.
+
+```bash
+git clone --branch feature/bakery-photo-preview https://github.com/craveup-oss/cravejs-web-template.git
+cd cravejs-web-template
+corepack enable
+pnpm install --frozen-lockfile
+pnpm dev:fixtures --profile standalone-cli --tenant fixture-base
+```
+
+Open **[the bakery preview](http://localhost:3000/design-system-preview?preset=bakery-editorial&controls=0)**
+to see the pictured storefront. Resize your browser to explore its mobile layout.
+
+Open **[the ordering fixtures](http://localhost:3000)** to try the separate sample
+ordering flow. Fixture mode is labeled **NO LIVE ORDERS**, makes no live API
+requests, and disables Google Maps lookups even if a local environment contains a
+browser key.
+
+To adapt the bakery, start with its [sample content](src/presets/bakery-preview-data.ts),
+[preset configuration](src/presets/storefront-presets.ts), and
+[photography](public/assets/template/BAKERY-PHOTOGRAPHY.md).
+
+> **Release status:** this is a public template preview with two runtime profiles.
+> The public `crave` CLI generator and generated-project upgrade path have not
+> shipped. Clone the source to run and adapt it; live ordering requires restaurant
+> configuration and API access.
 
 ## Why teams start here
 
@@ -29,28 +81,6 @@ Next.js 16 · React 19 · App Router · Tailwind v4 · TypeScript · pnpm · MIT
 
 The result is room for a distinctive restaurant experience without forking the commerce logic every
 time the visual direction changes.
-
-## Try the storefront locally
-
-You can explore the complete fixture storefront without Crave credentials and without making a live
-API request.
-
-### Prerequisites
-
-- Node.js 24 (see [`.nvmrc`](.nvmrc))
-- pnpm 10.33.2 (pinned in [`package.json`](package.json))
-
-```bash
-git clone https://github.com/craveup/cravejs-web-template.git
-cd cravejs-web-template
-corepack enable
-pnpm install --frozen-lockfile
-pnpm dev:fixtures --profile standalone-cli --tenant fixture-base
-```
-
-Open [http://localhost:3000](http://localhost:3000). The fixture runtime is labeled in the UI and
-stays zero-network, so it is safe for design exploration and contribution work. Fixture commands
-disable Google Maps lookups even when a local environment file contains a browser key.
 
 ## Choose a visual direction
 

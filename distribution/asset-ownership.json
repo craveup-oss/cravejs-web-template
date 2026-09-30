@@ -69,6 +69,20 @@
       "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
       "license": "MIT",
       "sha256": "efd1ce36f7c0882c78df77598003d096b439e1a3c1581023889ee9094332c5a7"
+    },
+    {
+      "path": "docs/images/storefront-desktop.webp",
+      "status": "crave-owned",
+      "source": "Screenshot of this template bakery visual preview at source commit 9e41cfeb6dc38bbc66d3eb219fc01a427999f005; AI-generated food photography documented in public/assets/template/BAKERY-PHOTOGRAPHY.md",
+      "license": "MIT",
+      "sha256": "6e2fbf6ace7b2d3b48b094c790724eb7e56a7d7ff43f0c9a938793bc53533e3f"
+    },
+    {
+      "path": "docs/images/storefront-mobile.webp",
+      "status": "crave-owned",
+      "source": "Screenshot of this template bakery visual preview at source commit 9e41cfeb6dc38bbc66d3eb219fc01a427999f005; AI-generated food photography documented in public/assets/template/BAKERY-PHOTOGRAPHY.md",
+      "license": "MIT",
+      "sha256": "f764375818ec4ee9a40dbd8e817f48ec0bf2409e9f90fc68cb53876b01d32c11"
     }
   ]
 }
