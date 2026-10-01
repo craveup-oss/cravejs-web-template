@@ -4,7 +4,7 @@ A responsive Next.js storefront for restaurant ordering. Make the menu, photogra
 and guest experience your own, with a shared commerce core for carts, fulfillment,
 and hosted checkout.
 
-**[Explore the live storefront](https://cravejs-web-template.vercel.app)**
+**Bakery storefront implementation — external sandbox deployment pending acceptance**
 · [Run it locally](#run-the-bakery-preview)
 · [Documentation](https://docs.craveup.com)
 · [Storefront API contract](docs/contracts/STOREFRONT-API.md)
@@ -55,24 +55,41 @@ ordering flow. Fixture mode is labeled **NO LIVE ORDERS**, makes no live API
 requests, and disables Google Maps lookups even if a local environment contains a
 browser key.
 
-### Hosted design demo
+### Run the API-backed bakery
 
-The public demo deploys this repository's `main` branch to the Crave Vercel project
-`cravejs-web-template` with Node.js 24. Its project settings enable
-`DESIGN_SYSTEM_PREVIEW=1`, `STOREFRONT_PROFILE=hosted-multitenant`, and
-`STOREFRONT_HOSTED_TENANTS_JSON={}`. The empty registry configures no live merchants;
-the existing design preview renders repository-owned sample content. In this mode,
-the root URL redirects to the bakery preview. Keep the preview flag unset for a
-merchant storefront. The demo is a visual sample, not a live ordering service.
+The bakery preset now applies to the real ordering route. `/` and `/menu` resolve the
+configured location after verifying it belongs to the merchant. Products, prices and
+menu photography come from Crave; the design preview remains a separate visual sample.
 
-To adapt the bakery, start with its [sample content](src/presets/bakery-preview-data.ts),
-[preset configuration](src/presets/storefront-presets.ts), and
-[photography](public/assets/template/BAKERY-PHOTOGRAPHY.md).
+```bash
+cp .env.example .env.local
+pnpm dev
+```
 
-> **Release status:** this is a public template preview with two runtime profiles.
-> The public `crave` CLI generator and generated-project upgrade path have not
-> shipped. Clone the source to run and adapt it; live ordering requires restaurant
-> configuration and API access.
+The example points to the dedicated **Crave External Sandbox** tenant. It contains
+public IDs and origins only. That tenant must finish onboarding and catalog publication
+before the API-backed menu can load; the app does not substitute preview data on failure.
+The sandbox notice makes clear that no real pickup or delivery takes place.
+
+For another business, replace the four `NEXT_PUBLIC_CRAVEUP_*` settings and edit
+`src/config/standalone-settings.ts`. Never add a Crave administrative API key, Stripe
+secret, database URL or OAuth token to the frontend or repository.
+
+### Deploy the bakery demo
+
+The intended hostname is `https://leclerc-bakery.order.page`, serving **this OSS
+repository**, connected to `https://sandbox-api.craveup.com`. Its checkout allowlist
+is `https://checkout.sandbox.order.page`. Neither internal development nor production
+is the demo's backend. The existing hostname has not yet been promoted to this branch.
+
+See [the implementation and release checklist](docs/LECLERC-SANDBOX.md). Run
+`pnpm verify`, `pnpm build`, then `pnpm verify:sandbox-demo` with the deployment
+environment loaded. The final command performs credential-free public SDK reads and
+fails unless the correct tenant's published menu includes both pastry photographs.
+
+The earlier visual sample at `cravejs-web-template.vercel.app` is not evidence that
+the API-backed bakery has been deployed. Keep `DESIGN_SYSTEM_PREVIEW` and fixture
+runtime settings unset on the bakery deployment.
 
 ## Why teams start here
 

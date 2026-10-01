@@ -1,7 +1,7 @@
 "use client";
 
 import type { StorefrontCart, UpdateGratuityPayload } from "@craveup/storefront-sdk";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { StorefrontCheckoutAdjustmentError } from "@/lib/storefront/checkout-adjustment-actions";
 
@@ -49,10 +49,12 @@ function conflict(message: string, cart: StorefrontCart) {
 export function ConnectedCheckoutAdjustments({
   gratuity,
   initialCart,
+  renderCheckoutAction,
   runtime,
 }: {
   readonly gratuity: CheckoutGratuityState;
   readonly initialCart: StorefrontCart;
+  readonly renderCheckoutAction: (cart: StorefrontCart, blocked: boolean) => ReactNode;
   readonly runtime: CheckoutAdjustmentRuntime;
 }) {
   const [adjustmentKeys] = useState(createAttemptKeys);
@@ -119,6 +121,7 @@ export function ConnectedCheckoutAdjustments({
         mutate(cart, { kind: "apply-discount", code })
       }
       onRemoveDiscount={(cart) => mutate(cart, { kind: "remove-discount" })}
+      renderCheckoutAction={renderCheckoutAction}
     />
   );
 }

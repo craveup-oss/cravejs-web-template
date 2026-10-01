@@ -55,6 +55,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         {runtime?.mode === "fixture" ? (
           <FixtureModeBanner runtime={runtime} />
         ) : null}
+        {runtime?.mode === "live" && runtime.config.apiBaseUrl === "https://sandbox-api.craveup.com" ? (
+          <aside className="sandbox-demo-banner" role="status">Demo bakery · Test orders only · No real pickup or delivery</aside>
+        ) : null}
         {children}
       </body>
     </html>

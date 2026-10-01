@@ -303,7 +303,7 @@ function StorefrontPresetHero({
         <div>
           {visualPreset.id === "bakery-editorial" ? (
             <>
-              <p className="bakery-eyebrow">LECLERC · NEIGHBORHOOD BAKERY</p>
+              <p className="bakery-eyebrow">{data.location.name} · NEIGHBORHOOD BAKERY</p>
               <h1>A little butter.<br />A better morning.</h1>
               <p className="bakery-description">Slow-fermented dough. Golden, shattering layers. Your daily ritual, fresh from our oven.</p>
             </>

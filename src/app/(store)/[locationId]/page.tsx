@@ -1,3 +1,4 @@
+import { resolveStorefrontPreset } from "@/presets/storefront-presets";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -106,6 +107,9 @@ export default async function StorePage({ params, searchParams }: StorePageProps
       <StoreHome
         data={data}
         variant={variant}
+        visualPreset={requestRuntime?.config.presetId
+          ? resolveStorefrontPreset(requestRuntime.config.presetId)
+          : undefined}
         entryContextSlot={
           <>
             <EntryBanner intent={intent} locationId={locationId} />

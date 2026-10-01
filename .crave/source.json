@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "sourceRepository": "craveup/cravejs-storefront-template",
-  "sourceCommit": "b77d2a107aa3df4363e022ebebd16b3e1070ea6d",
-  "publicRepository": "craveup/cravejs-web-template"
+  "sourceCommit": "59849556e3d506cf8d5dcc0ce92f2363d86856d9",
+  "publicRepository": "craveup-oss/cravejs-web-template"
 }

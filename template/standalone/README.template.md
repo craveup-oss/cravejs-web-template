@@ -53,7 +53,10 @@ examples. Keep the generated `projectId`, `tenantId`, template release and schem
 |---|---|
 | `NEXT_PUBLIC_CRAVEUP_API_URL` | Exact public Storefront API origin |
 | `STOREFRONT_PROFILE` | Must be `standalone-cli` in this project |
-| `STOREFRONT_STANDALONE_CONFIG_JSON` | Merchant, canonical origin, allowed origins, theme, locale, timezone and public capability flags |
+| `NEXT_PUBLIC_CRAVEUP_MERCHANT_SLUG` | Merchant slug |
+| `NEXT_PUBLIC_CRAVEUP_LOCATION_ID` | Default location ID |
+| `NEXT_PUBLIC_CRAVEUP_CHECKOUT_ORIGIN` | Exact hosted-checkout origin |
+| `STOREFRONT_CANONICAL_ORIGIN` | Production HTTPS storefront origin |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Optional domain-restricted browser key for delivery address UX |
 
 See [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md) for the complete field contract. The storefront

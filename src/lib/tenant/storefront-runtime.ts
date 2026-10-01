@@ -8,7 +8,7 @@ import {
   type FixtureRuntime,
 } from "../../fixtures/fixture-runtime";
 import { createHostedTenantResolver } from "./hosted-tenant-resolver";
-import { createStandaloneTenantResolver } from "./standalone-tenant-resolver";
+import { readStandaloneEnvironment } from "../../config/standalone-environment";
 import type {
   HostedTenantRegistry,
   TenantResolutionRequest,
@@ -19,6 +19,7 @@ export type StorefrontRuntime =
   | {
       readonly mode: "live";
       readonly config: ResolvedStorefrontConfig;
+      readonly defaultLocationId?: string;
     };
 
 export class StorefrontRuntimeError extends Error {
@@ -43,7 +44,7 @@ function readEnvironment(
 
 function parseJsonEnvironmentValue(
   environment: Readonly<Record<string, string | undefined>>,
-  field: "STOREFRONT_HOSTED_TENANTS_JSON" | "STOREFRONT_STANDALONE_CONFIG_JSON",
+  field: "STOREFRONT_HOSTED_TENANTS_JSON",
 ): unknown {
   const value = environment[field];
   if (!value) {
@@ -96,25 +97,20 @@ export async function resolveStorefrontRuntime(
     );
   }
 
-  const resolver =
-    profile === "hosted-multitenant"
-      ? createHostedTenantResolver(
-          createEnvironmentHostedRegistry(
-            parseJsonEnvironmentValue(
-              processEnvironment,
-              "STOREFRONT_HOSTED_TENANTS_JSON",
-            ),
-          ),
-          environment,
-        )
-      : createStandaloneTenantResolver(
-          parseJsonEnvironmentValue(
-            processEnvironment,
-            "STOREFRONT_STANDALONE_CONFIG_JSON",
-          ),
-          environment,
-        );
-  const config = await resolver.resolve(request);
+  if (profile === "standalone-cli") {
+    const { config, defaultLocationId } = readStandaloneEnvironment(
+      processEnvironment,
+      environment,
+    );
+    return { mode: "live", config, defaultLocationId };
+  }
+
+  const config = await createHostedTenantResolver(
+    createEnvironmentHostedRegistry(
+      parseJsonEnvironmentValue(processEnvironment, "STOREFRONT_HOSTED_TENANTS_JSON"),
+    ),
+    environment,
+  ).resolve(request);
 
   if (
     config &&

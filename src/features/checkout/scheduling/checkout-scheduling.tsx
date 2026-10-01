@@ -209,7 +209,10 @@ export function CheckoutScheduling(props: CheckoutSchedulingProps) {
     }
   }
 
-  const terminal = actionState === "expired" || actionState === "immutable";
+  const terminal =
+    actionState === "expired" ||
+    actionState === "missing" ||
+    actionState === "immutable";
   const confirmLabel = loadFailure
     ? retryRemaining > 0
       ? messages.retryIn(retryRemaining)

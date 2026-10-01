@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { standaloneSettings } from "./src/config/standalone-settings.ts";
 
 interface StorefrontSecurityPolicyInput {
   readonly apiOrigin?: string;
@@ -123,12 +124,13 @@ export function readConfiguredAssetOrigins(
   environment: Readonly<Record<string, string | undefined>>,
   profile: string | undefined,
 ): readonly string[] {
+  if (profile === "standalone-cli") {
+    return uniqueOrigins(standaloneSettings.assetOrigins, "assetOrigins");
+  }
   const selectedConfig =
     profile === "hosted-multitenant"
       ? environment.STOREFRONT_HOSTED_TENANTS_JSON
-      : profile === "standalone-cli"
-        ? environment.STOREFRONT_STANDALONE_CONFIG_JSON
-        : undefined;
+      : undefined;
   const serializedConfigs = selectedConfig ? [selectedConfig] : [];
   const origins: string[] = [];
 
@@ -177,15 +179,6 @@ const apiOrigin = process.env.NEXT_PUBLIC_CRAVEUP_API_URL;
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  async redirects() {
-    return process.env.DESIGN_SYSTEM_PREVIEW === "1"
-      ? [{
-          source: "/",
-          destination: "/design-system-preview?preset=bakery-editorial&controls=0",
-          permanent: false,
-        }]
-      : [];
-  },
   images: {
     remotePatterns: assetOrigins.map((origin) => {
       const url = new URL(origin);

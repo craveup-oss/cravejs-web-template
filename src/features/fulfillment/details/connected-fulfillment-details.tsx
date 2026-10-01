@@ -9,6 +9,7 @@ import {
   setTableFulfillmentDetails,
   type FulfillmentDetailsRuntime,
 } from "./fulfillment-details-runtime";
+import { fulfillmentRoutes } from "../routes";
 import { RoomForm, type RoomSubmission } from "./room-form";
 import { TableConfirmation } from "./table-confirmation";
 
@@ -41,6 +42,9 @@ export function ConnectedTableConfirmation({
     <TableConfirmation
       initialTableIdentifier={initialTableIdentifier}
       locationLabel={locationLabel}
+      menuHrefFor={(table) =>
+        `${fulfillmentRoutes.store(locationId)}?table=${encodeURIComponent(table)}`
+      }
       onSubmit={async (tableNumber) => {
         const signature = JSON.stringify({ tableNumber });
         if (attempt.current?.signature !== signature) {
@@ -78,6 +82,9 @@ export function ConnectedRoomForm({
   return (
     <RoomForm
       initialRoomIdentifier={initialRoomIdentifier}
+      menuHrefFor={(room) =>
+        `${fulfillmentRoutes.store(locationId)}?room=${encodeURIComponent(room)}`
+      }
       onSubmit={async (detail: RoomSubmission) => {
         const signature = JSON.stringify(detail);
         if (attempt.current?.signature !== signature) {

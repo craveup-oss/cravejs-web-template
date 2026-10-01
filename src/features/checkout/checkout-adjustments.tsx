@@ -5,9 +5,8 @@ import type {
   StorefrontCart,
   UpdateGratuityPayload,
 } from "@craveup/storefront-sdk";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 
-import { Button } from "@/components/ui/button";
 import { OrderSummary } from "@/features/cart/order-summary";
 import type {
   StorefrontLoyaltyMutationResult,
@@ -39,6 +38,8 @@ export interface CheckoutAdjustmentsProps {
     code: string,
   ) => Promise<StorefrontCart>;
   readonly onRemoveDiscount: (cart: StorefrontCart) => Promise<StorefrontCart>;
+  /** Renders checkout for the current authoritative cart; blocked while an adjustment is unsettled. */
+  readonly renderCheckoutAction: (cart: StorefrontCart, blocked: boolean) => ReactNode;
 }
 
 function adjustmentErrorMessage(error: unknown) {
@@ -94,6 +95,7 @@ export function CheckoutAdjustments({
   onUpdateGratuity,
   onApplyDiscount,
   onRemoveDiscount,
+  renderCheckoutAction,
 }: CheckoutAdjustmentsProps) {
   const [cart, setCart] = useState(initialCart);
   const [selectedTip, setSelectedTip] = useState<string>();
@@ -381,12 +383,7 @@ export function CheckoutAdjustments({
         totalLabel="Total"
         formattedTotal={cart.orderTotalWithServiceFeeFormatted}
       />
-      <p className={styles.secureNote} id="secure-checkout-note">
-        Payment is completed on Crave’s secure hosted checkout.
-      </p>
-      <Button aria-describedby="secure-checkout-note" disabled>
-        Continue to secure checkout
-      </Button>
+      {renderCheckoutAction(cart, blocked)}
     </div>
   );
 }

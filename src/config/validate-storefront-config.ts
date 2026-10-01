@@ -1,3 +1,4 @@
+import { isStorefrontPresetId } from "../presets/storefront-presets";
 import { themeIds } from "../styles/themes";
 import {
   validateStorefrontLocale,
@@ -33,6 +34,7 @@ const configFields = new Set([
   "assetOrigins",
   "checkoutOrigins",
   "themeId",
+  "presetId",
   "locale",
   "timeZone",
   "templateRelease",
@@ -287,6 +289,11 @@ export function validateStorefrontConfig(
     fail("themeId", "expected a supported generated theme");
   }
 
+  const presetId = input.presetId;
+  if (Object.hasOwn(input, "presetId") && !isStorefrontPresetId(presetId)) {
+    fail("presetId", "expected a supported storefront preset");
+  }
+
   const locale = validateLocale(readNonEmptyString(input, "locale"));
   const timeZone = validateTimeZone(readNonEmptyString(input, "timeZone"));
   const templateRelease = readNonEmptyString(input, "templateRelease");
@@ -323,6 +330,7 @@ export function validateStorefrontConfig(
     assetOrigins,
     checkoutOrigins,
     themeId,
+    ...(isStorefrontPresetId(presetId) ? { presetId } : {}),
     locale,
     timeZone,
     templateRelease,

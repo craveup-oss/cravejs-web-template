@@ -39,7 +39,11 @@ export function StorefrontShell({
       {hero}
       <main className="storefront-main" id="storefront-main" tabIndex={-1}>
         {intro}
-        <div className="storefront-grid" data-has-rail={Boolean(rail)}>
+        <div
+          className="storefront-grid"
+          data-has-leading={Boolean(leading)}
+          data-has-rail={Boolean(rail)}
+        >
           {leading ? <div className="storefront-leading">{leading}</div> : null}
           <div className="storefront-content">{children}</div>
           {rail ? <div className="storefront-rail">{rail}</div> : null}

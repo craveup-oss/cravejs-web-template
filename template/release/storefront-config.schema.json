@@ -100,6 +100,15 @@
           "$ref": "#/$defs/newsletter"
         }
       ]
+    },
+    "presetId": {
+      "type": "string",
+      "enum": [
+        "bakery-editorial",
+        "noodle-house",
+        "sushi-atelier",
+        "counter-service"
+      ]
     }
   },
   "$defs": {

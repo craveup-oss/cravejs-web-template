@@ -1,6 +1,7 @@
 "use client";
 
 import type { StorefrontCart } from "@craveup/storefront-sdk";
+import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
 import { flushSync } from "react-dom";
 
@@ -19,9 +20,12 @@ export type SetRoomAction = (
 
 export function RoomForm({
   initialRoomIdentifier = "",
+  menuHrefFor,
   onSubmit,
 }: {
   initialRoomIdentifier?: string;
+  /** Menu destination for a room the cart has confirmed. */
+  menuHrefFor?: (roomNumber: string) => string;
   onSubmit?: SetRoomAction;
 }) {
   const [roomIdentifier, setRoomIdentifier] = useState(initialRoomIdentifier);
@@ -135,9 +139,15 @@ export function RoomForm({
         <p className={styles.preview}>
           PREVIEW ONLY — room detail persistence awaits platform evidence.
         </p>
-        <button className={styles.submit} type="submit" disabled={pending || !onSubmit}>
-          {pending ? "Confirming…" : "Continue to the menu"}
-        </button>
+        {confirmedRoomNumber && menuHrefFor ? (
+          <Link className={styles.submit} href={menuHrefFor(confirmedRoomNumber)}>
+            Continue to the menu
+          </Link>
+        ) : (
+          <button className={styles.submit} type="submit" disabled={pending || !onSubmit}>
+            {pending ? "Confirming…" : "Continue to the menu"}
+          </button>
+        )}
       </form>
     </main>
   );

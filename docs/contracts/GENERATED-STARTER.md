@@ -37,7 +37,7 @@ export type Sha256Hex = string; // exactly 64 lowercase hexadecimal characters
 
 export interface WebTemplateRegistryEntry {
   id: "web";
-  repository: "craveup/cravejs-web-template";
+  repository: "craveup-oss/cravejs-web-template";
   platform: "web";
   profile: "standalone-cli";
   templateRelease: string; // exact semver, never a range
@@ -83,6 +83,7 @@ export interface StandaloneGeneratorInput {
   outputDirectory: string;
   templateRelease: string;
   merchantSlug: string;
+  locationId: string; // exact 1–128 character ID returned for this merchant
   canonicalOrigin: string;
   apiBaseUrl: string;
   assetOrigins: readonly string[];
@@ -165,7 +166,7 @@ The provenance file conforms to:
 export interface GeneratedTemplateProvenance {
   schemaVersion: 1;
   id: "web";
-  repository: "craveup/cravejs-web-template";
+  repository: "craveup-oss/cravejs-web-template";
   platform: "web";
   profile: "standalone-cli";
   projectId: string; // immutable UUID preserved across upgrades
@@ -294,3 +295,33 @@ API release, OpenAPI SHA-256, generated-project CI result, dependency/license sc
 link, known migrations, and rollback result. The hosted profile records the same shared-core identity
 so a behavior difference can be traced to profile configuration rather than an unknown template
 version.
+
+## Standalone environment mapping (2026-09-27)
+
+The unreleased web starter now materializes its resolved configuration as four public env values
+(`NEXT_PUBLIC_CRAVEUP_API_URL`, `NEXT_PUBLIC_CRAVEUP_MERCHANT_SLUG`,
+`NEXT_PUBLIC_CRAVEUP_LOCATION_ID`, `NEXT_PUBLIC_CRAVEUP_CHECKOUT_ORIGIN`) plus
+`src/config/standalone-settings.ts` for identity and presentation. The existing resolved JSON Schema
+still validates the composed config; the default location is an entry setting outside that schema.
+The generator must obtain the exact opaque location ID from the selected merchant, emit the primary exact
+checkout origin into env and preserve any remaining origins in typed `checkoutOrigins`, and preserve project identity on upgrades. It writes canonical origin into the typed
+settings (or `STOREFRONT_CANONICAL_ORIGIN` for deployment). It must not emit the retired standalone JSON
+env. Existing unreleased generator integration must be updated and certified against this exact
+release before publication; this change is not proof that the external CLI was updated.
+
+Migration: move projectId, canonicalOrigin, assetOrigins, themeId, locale, timeZone, templateRelease,
+configSchemaVersion, capabilities, and newsletter from the old config into the typed settings; move
+apiBaseUrl, merchantSlug and the primary checkout origin into env, preserve all other checkout origins
+in typed `checkoutOrigins`, add the merchant location ID,
+then remove the old JSON variable. Hosted registry configuration remains unchanged. Rebuild with the
+same public env used at runtime. No published artifact or production hosted service is modified.
+
+### Default entry location routability
+
+The public API identifier remains an opaque 1–128 character string. This template's default entry
+setting additionally excludes exactly `.` and `..`: URL clients normalize these dot segments,
+including percent-encoded forms, before reaching the dynamic route. Configuration fails with an
+explicit error for these two values instead of redirecting indefinitely. All other identifiers keep
+their exact value and are URL-encoded on entry after merchant membership is verified. This is a
+template entry-route limitation, not a change to the SDK/OpenAPI identifier schema. The generator
+must validate this entry constraint before emitting the environment file.

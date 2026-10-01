@@ -54,7 +54,7 @@
       "status": "crave-owned",
       "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
       "license": "MIT",
-      "sha256": "311e04cde1388c7f8ea31f17a86430be568fdc80e5712abbeccbb5ba4b1d68b8"
+      "sha256": "77890313f0fa33fca3ffcf697105a020a1a6861ebb1780663ee96ddd7527ed3c"
     },
     {
       "path": "public/assets/template/bakery-editorial-hero.webp",
@@ -68,7 +68,7 @@
       "status": "crave-owned",
       "source": "OpenAI imagegen; generated for this template on 2026-09-30; see public/assets/template/BAKERY-PHOTOGRAPHY.md",
       "license": "MIT",
-      "sha256": "efd1ce36f7c0882c78df77598003d096b439e1a3c1581023889ee9094332c5a7"
+      "sha256": "03e7a2d4e7b0a2e6731fef8a9dc26998c4d45559c911d5b9f8ff963d1f601931"
     },
     {
       "path": "docs/images/storefront-desktop.webp",

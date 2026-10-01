@@ -11,9 +11,15 @@ import { toStorefrontErrorState } from "@/lib/storefront/error-state";
 import { ConnectedCheckoutAdjustments } from "./connected-checkout-adjustments";
 import type { CheckoutAdjustmentRuntime } from "./checkout-adjustment-runtime";
 import type { CheckoutIdentityResult } from "./checkout-identity";
+import type { StorefrontHostedCheckoutConfig } from "./hosted-checkout-integration";
+import type { NavigateTopLevel } from "./hosted-checkout";
 import type { CheckoutGratuityState } from "./load-checkout-adjustment-config";
 import { loadPickupPreflight } from "./checkout-preflight-runtime";
 import type { PickupPreflightResult } from "./pickup-preflight";
+import {
+  SecureCheckoutAction,
+  type CheckoutHandoffRuntime,
+} from "./secure-checkout-action";
 import {
   CheckoutScheduling,
   type CheckoutOrderTimes,
@@ -72,25 +78,31 @@ function pickupTimeSummary(
 export function PickupCheckoutPreflight({
   adjustmentRuntime,
   backHref,
+  checkoutConfig,
   gratuity,
+  handoffRuntime,
   identity,
   locationAddress,
   locationId,
   locale,
   merchantSlug,
   mode,
+  navigateTopLevel,
   orderTimes,
   orderTimeRuntime,
 }: {
   readonly adjustmentRuntime: CheckoutAdjustmentRuntime;
   readonly backHref: string;
+  readonly checkoutConfig: StorefrontHostedCheckoutConfig;
   readonly gratuity: CheckoutGratuityState;
+  readonly handoffRuntime: CheckoutHandoffRuntime;
   readonly identity: CheckoutIdentityResult;
   readonly locationAddress?: string;
   readonly locationId: string;
   readonly locale: string;
   readonly merchantSlug: string;
   readonly mode: "fixture" | "live";
+  readonly navigateTopLevel?: NavigateTopLevel;
   readonly orderTimes: CheckoutOrderTimes;
   readonly orderTimeRuntime: OrderTimeRuntime;
 }) {
@@ -271,6 +283,17 @@ export function PickupCheckoutPreflight({
           gratuity={gratuity}
           initialCart={cart}
           runtime={adjustmentRuntime}
+          renderCheckoutAction={(currentCart, blocked) => (
+            <SecureCheckoutAction
+              cart={currentCart}
+              config={checkoutConfig}
+              disabled={blocked}
+              label="Continue to secure checkout"
+              locale={locale}
+              runtime={handoffRuntime}
+              {...(navigateTopLevel ? { navigateTopLevel } : {})}
+            />
+          )}
         />
       </aside>
     </section>

@@ -25,6 +25,7 @@ const english = {
   state: {
     conflict: "The order changed elsewhere. Review the refreshed order, then retry this time.",
     expired: "This order has expired. Return to the menu and start a new order.",
+    missing: "Your order session is no longer available. Return to the menu to start again.",
     immutable: "This order time can no longer be changed.",
     "rate-limited": "Order-time updates are temporarily rate limited.",
     processing: "Your order-time update is still processing. Retry to check its result.",

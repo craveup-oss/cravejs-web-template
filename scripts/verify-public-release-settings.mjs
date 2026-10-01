@@ -3,7 +3,7 @@ import { realpathSync } from "node:fs";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-const canonicalRepository = "craveup/cravejs-web-template";
+const canonicalRepository = "craveup-oss/cravejs-web-template";
 const publicReleaseEnvironment = "public-release";
 const apiVersion = "2026-03-10";
 

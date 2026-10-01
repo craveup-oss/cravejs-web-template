@@ -1,3 +1,4 @@
+import type { StorefrontPresetId } from "../presets/storefront-presets";
 import type { StorefrontProfile } from "./storefront-profile";
 
 export const storefrontConfigSchemaVersion = "1.0.0" as const;
@@ -24,6 +25,7 @@ export interface ResolvedStorefrontConfig {
   assetOrigins: readonly string[];
   checkoutOrigins: readonly string[];
   themeId: string;
+  presetId?: StorefrontPresetId;
   locale: string;
   timeZone: string;
   templateRelease: string;

@@ -3,7 +3,7 @@
   "policyVersion": "1.0.0",
   "identity": {
     "id": "web",
-    "repository": "craveup/cravejs-web-template",
+    "repository": "craveup-oss/cravejs-web-template",
     "platform": "web",
     "profile": "standalone-cli"
   },

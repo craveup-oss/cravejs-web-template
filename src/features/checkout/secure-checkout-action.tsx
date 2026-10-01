@@ -1,13 +1,7 @@
 "use client";
 
 import type { StorefrontCart } from "@craveup/storefront-sdk";
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type {
@@ -23,6 +17,7 @@ import {
 import type {
   HostedCheckoutAttemptInput,
   HostedCheckoutHandoff,
+  HostedCheckoutSnapshot,
   NavigateTopLevel,
 } from "./hosted-checkout";
 import {
@@ -86,6 +81,8 @@ function createHandoff(
   });
 }
 
+const editingSnapshot: HostedCheckoutSnapshot = Object.freeze({ state: "editing" });
+
 function cartFingerprint(cart: StorefrontCart): string {
   return JSON.stringify([
     cart.locationId,
@@ -127,6 +124,7 @@ function handoffInput(
 export function SecureCheckoutAction({
   cart,
   config,
+  disabled = false,
   label,
   locale,
   navigateTopLevel = browserTopLevelNavigation,
@@ -134,6 +132,7 @@ export function SecureCheckoutAction({
 }: {
   readonly cart: StorefrontCart;
   readonly config: StorefrontHostedCheckoutConfig;
+  readonly disabled?: boolean;
   readonly label: string;
   readonly locale: string;
   readonly navigateTopLevel?: NavigateTopLevel;
@@ -151,6 +150,7 @@ export function SecureCheckoutAction({
       key={scope}
       cart={cart}
       config={config}
+      disabled={disabled}
       label={label}
       locale={locale}
       navigateTopLevel={navigateTopLevel}
@@ -162,6 +162,7 @@ export function SecureCheckoutAction({
 function ScopedSecureCheckoutAction({
   cart,
   config,
+  disabled,
   label,
   locale,
   navigateTopLevel,
@@ -169,25 +170,34 @@ function ScopedSecureCheckoutAction({
 }: {
   readonly cart: StorefrontCart;
   readonly config: StorefrontHostedCheckoutConfig;
+  readonly disabled: boolean;
   readonly label: string;
   readonly locale: string;
   readonly navigateTopLevel: NavigateTopLevel;
   readonly runtime: CheckoutHandoffRuntime;
 }) {
-  const [handoff] = useState(() =>
-    createHandoff(runtime, config, navigateTopLevel),
-  );
-  const snapshot = useSyncExternalStore(
-    handoff.subscribe,
-    handoff.getSnapshot,
-    handoff.getSnapshot,
-  );
+  // The parent keys this component by checkout scope, so the mount-time inputs are authoritative.
+  const scopeRef = useRef({ config, navigateTopLevel, runtime });
+  const handoffRef = useRef<HostedCheckoutHandoff | null>(null);
+  const [snapshot, setSnapshot] = useState<HostedCheckoutSnapshot>(editingSnapshot);
   const attemptRef = useRef<AttemptIdentity | undefined>(undefined);
   const issueRef = useRef<HTMLParagraphElement>(null);
   const noteId = useId();
   const messages = getSecureCheckoutActionMessages(locale);
 
-  useEffect(() => () => handoff.dispose(), [handoff]);
+  // Own the handoff per effect lifetime: a Strict Mode replay disposes the first
+  // instance and creates a fresh one instead of leaving a disposed handoff behind.
+  useEffect(() => {
+    const scope = scopeRef.current;
+    const handoff = createHandoff(scope.runtime, scope.config, scope.navigateTopLevel);
+    handoffRef.current = handoff;
+    const unsubscribe = handoff.subscribe(() => setSnapshot(handoff.getSnapshot()));
+    return () => {
+      unsubscribe();
+      handoff.dispose();
+      if (handoffRef.current === handoff) handoffRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (snapshot.state === "failed" || snapshot.state === "outcome-unknown") {
@@ -210,11 +220,14 @@ function ScopedSecureCheckoutAction({
       : "";
 
   async function startCheckout(): Promise<void> {
-    if (snapshot.state === "handoff-ready") {
+    const handoff = handoffRef.current;
+    if (!handoff) return;
+    const current = handoff.getSnapshot();
+    if (current.state === "handoff-ready") {
       handoff.open();
       return;
     }
-    if (snapshot.state === "failed" || snapshot.state === "canceled-before-open") {
+    if (current.state === "failed" || current.state === "canceled-before-open") {
       handoff.reset();
       attemptRef.current = undefined;
     }
@@ -249,7 +262,7 @@ function ScopedSecureCheckoutAction({
       </p>
       <Button
         aria-describedby={noteId}
-        disabled={pending || handedOff}
+        disabled={disabled || pending || handedOff}
         onClick={() => void startCheckout()}
       >
         {pending ? messages.preparing : label}

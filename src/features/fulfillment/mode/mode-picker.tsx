@@ -1,11 +1,13 @@
 "use client";
 
 import type { StartOrderingSessionRequest } from "@craveup/storefront-sdk";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useHydrated } from "@/lib/storefront/use-hydrated";
 
 import { describeFulfillment } from "../detail";
+import { fulfillmentRoutes } from "../routes";
 import { toStartOrderingSessionRequest } from "../sdk-contract";
 import {
   fulfillmentModeLabels,
@@ -88,6 +90,13 @@ function ModePickerState({
   );
   const [retryRemaining, setRetryRemaining] = useState(0);
   const description = describeFulfillment(authoritativeDetail, locationId);
+  // After the returned order confirms the chosen mode, the next step is its details or the menu.
+  const nextStep =
+    state === "success" && draftMode === authoritativeDetail.mode
+      ? description.complete
+        ? { label: "Back to menu", href: fulfillmentRoutes.store(locationId) }
+        : { label: description.summary, href: description.changeHref }
+      : null;
   const actionLocked =
     !hydrated ||
     state === "pending" ||
@@ -174,17 +183,21 @@ function ModePickerState({
         {state === "error" ? "Fulfillment method could not be updated. Try again." : null}
       </div>
       <div className={styles.action}>
-        <button
-          type="button"
-          disabled={!onRequestMode || actionLocked}
-          onClick={requestMode}
-        >
-          {state === "pending"
-            ? "Updating…"
-            : retryRemaining > 0
-              ? `Try again in ${retryRemaining}s`
-            : `Continue with ${fulfillmentModeLabels[draftMode]}`}
-        </button>
+        {nextStep ? (
+          <Link href={nextStep.href}>{nextStep.label}</Link>
+        ) : (
+          <button
+            type="button"
+            disabled={!onRequestMode || actionLocked}
+            onClick={requestMode}
+          >
+            {state === "pending"
+              ? "Updating…"
+              : retryRemaining > 0
+                ? `Try again in ${retryRemaining}s`
+              : `Continue with ${fulfillmentModeLabels[draftMode]}`}
+          </button>
+        )}
       </div>
     </main>
   );
