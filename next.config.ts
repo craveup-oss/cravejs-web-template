@@ -177,6 +177,15 @@ const apiOrigin = process.env.NEXT_PUBLIC_CRAVEUP_API_URL;
 
 const nextConfig: NextConfig = {
   devIndicators: false,
+  async redirects() {
+    return process.env.DESIGN_SYSTEM_PREVIEW === "1"
+      ? [{
+          source: "/",
+          destination: "/design-system-preview?preset=bakery-editorial&controls=0",
+          permanent: false,
+        }]
+      : [];
+  },
   images: {
     remotePatterns: assetOrigins.map((origin) => {
       const url = new URL(origin);

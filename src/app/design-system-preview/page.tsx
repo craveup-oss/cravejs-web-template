@@ -269,6 +269,9 @@ export default async function DesignSystemPreview({ searchParams }: PreviewPageP
 
   return (
     <>
+      <aside className="preview-toolbar" aria-label="Demo notice">
+        Leclerc Bakery is a fictional design preview. No live orders.
+      </aside>
       {query.controls !== "0" ? (
         <>
           <nav className="preview-toolbar" aria-label="Storefront concept preview">

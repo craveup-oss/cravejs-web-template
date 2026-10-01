@@ -47,14 +47,6 @@ function SectionHeader({
   );
 }
 
-function selectItems(items: CatalogItemView[], ids: string[]) {
-  const itemsById = new Map(items.map((item) => [item.id, item]));
-  return ids.flatMap((id) => {
-    const item = itemsById.get(id);
-    return item ? [item] : [];
-  });
-}
-
 function ProductGrid({
   items,
   eagerCount = 0,
@@ -143,12 +135,7 @@ function CategoryScrollLayout({ data }: { data: StoreHomeData }) {
         <SectionHeader title="Most ordered" />
         <ProductGrid
           eagerCount={1}
-          items={selectItems(data.featuredItems, [
-            "crispy-chicken-sandwich",
-            "side-salad",
-            "chocolate-malt",
-            "crinkle-fries",
-          ])}
+          items={data.featuredItems.slice(0, 4)}
         />
       </section>
       <section id="seasonal-menus" className="seasonal-menus" tabIndex={-1}>
@@ -229,14 +216,7 @@ function FullMenuLayout({ data }: { data: StoreHomeData }) {
         <SectionHeader title="Most ordered" />
         <ProductGrid
           eagerCount={1}
-          items={selectItems(data.featuredItems, [
-            "double-smash-burger",
-            "chocolate-malt",
-            "mushroom-burger",
-            "crispy-chicken-sandwich",
-            "crinkle-fries",
-            "side-salad",
-          ])}
+          items={data.featuredItems.slice(0, 6)}
         />
       </section>
       <div className="full-menu-list">
@@ -314,7 +294,9 @@ function StorefrontPresetHero({
           alt=""
           fill
           preload
-          sizes="(min-width: 1024px) 100vw, (min-width: 600px) 600px, 100vw"
+          sizes={visualPreset.homeCompositionId === "editorial-product"
+            ? "(min-width: 1280px) 692px, (min-width: 1024px) 54vw, (min-width: 600px) 600px, 100vw"
+            : "(min-width: 1024px) 100vw, (min-width: 600px) 600px, 100vw"}
         />
       </div>
       <div className="storefront-preset-hero-copy">

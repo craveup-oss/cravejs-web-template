@@ -4,7 +4,7 @@ A responsive Next.js storefront for restaurant ordering. Make the menu, photogra
 and guest experience your own, with a shared commerce core for carts, fulfillment,
 and hosted checkout.
 
-**[Explore the storefront](https://developer.craveup.com/templates#cravejs-web-template)**
+**[Explore the live storefront](https://cravejs-web-template.vercel.app)**
 · [Run it locally](#run-the-bakery-preview)
 · [Documentation](https://docs.craveup.com)
 · [Storefront API contract](docs/contracts/STOREFRONT-API.md)
@@ -27,26 +27,20 @@ captures of the running template at desktop and mobile web sizes.
   </tr>
 </table>
 
-Try the **Desktop / Mobile** toggle in the [live showcase](https://developer.craveup.com/templates#cravejs-web-template),
-or select either screenshot to view it at full size.
+Open the [live bakery storefront](https://cravejs-web-template.vercel.app) and resize
+your browser to explore its responsive layout, or select either screenshot to view it at full size.
 
 Leclerc Bakery and its menu are fictional; the food photography is AI-generated.
 This preset demonstrates the responsive design. The separate ordering fixtures let
 you explore menus, modifiers, carts, pickup, delivery, and checkout handoff without
 credentials or live orders.
 
-> **Preview availability:** the pictured bakery is published on
-> [`feature/bakery-photo-preview`](https://github.com/craveup-oss/cravejs-web-template/tree/feature/bakery-photo-preview).
-> Its merge into `main` is pending the required review in
-> [PR #1](https://github.com/craveup-oss/cravejs-web-template/pull/1).
-> The quickstart below selects that branch so you get the design shown here.
-
 ## Run the bakery preview
 
 Use **Node.js 24** and **pnpm 10.33.2**. No Crave credentials are needed.
 
 ```bash
-git clone --branch feature/bakery-photo-preview https://github.com/craveup-oss/cravejs-web-template.git
+git clone https://github.com/craveup-oss/cravejs-web-template.git
 cd cravejs-web-template
 corepack enable
 pnpm install --frozen-lockfile
@@ -60,6 +54,16 @@ Open **[the ordering fixtures](http://localhost:3000)** to try the separate samp
 ordering flow. Fixture mode is labeled **NO LIVE ORDERS**, makes no live API
 requests, and disables Google Maps lookups even if a local environment contains a
 browser key.
+
+### Hosted design demo
+
+The public demo deploys this repository's `main` branch to the Crave Vercel project
+`cravejs-web-template` with Node.js 24. Its project settings enable
+`DESIGN_SYSTEM_PREVIEW=1`, `STOREFRONT_PROFILE=hosted-multitenant`, and
+`STOREFRONT_HOSTED_TENANTS_JSON={}`. The empty registry configures no live merchants;
+the existing design preview renders repository-owned sample content. In this mode,
+the root URL redirects to the bakery preview. Keep the preview flag unset for a
+merchant storefront. The demo is a visual sample, not a live ordering service.
 
 To adapt the bakery, start with its [sample content](src/presets/bakery-preview-data.ts),
 [preset configuration](src/presets/storefront-presets.ts), and
