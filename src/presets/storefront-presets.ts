@@ -21,7 +21,7 @@ export interface StorefrontPreset {
   readonly description: string;
   readonly defaultThemeId: ThemeId;
   readonly homeCompositionId: StorefrontHomeCompositionId;
-  readonly heroImageSrc: `/assets/template/${StorefrontPresetId}-hero.svg`;
+  readonly heroImageSrc: `/assets/template/${StorefrontPresetId}-hero.${"svg" | "webp"}`;
   readonly legacySource: {
     readonly repository: `craveup/${string}`;
     readonly commit: string;
@@ -43,7 +43,7 @@ const storefrontPresets = {
       "A warm, product-led story for bakeries, cafes, and chef-driven launches.",
     defaultThemeId: "hearth",
     homeCompositionId: "editorial-product",
-    heroImageSrc: "/assets/template/bakery-editorial-hero.svg",
+    heroImageSrc: "/assets/template/bakery-editorial-hero.webp",
     legacySource: {
       repository: "craveup/restaurant-storefront-starter",
       commit: "d0dbf862350b908f837f1c173a0a6bc37e93dbfe",

@@ -1,22 +1,78 @@
-# Crave.js Restaurant Storefront
+# Crave.js Web Storefront
 
-Restaurant ordering should look like your restaurant—not a generic checkout template.
+A responsive Next.js storefront for restaurant ordering. Make the menu, photography,
+and guest experience your own, with a shared commerce core for carts, fulfillment,
+and hosted checkout.
 
-Crave.js gives restaurant teams a themeable Next.js foundation for branded online ordering: menus,
-nested modifiers, carts, pickup, delivery, fixture-backed tableside and in-room service previews,
-hosted checkout handoff, customer accounts, orders and capability-gated loyalty. The shared core uses
-the public Crave Storefront SDK directly, with no browser API key and no payment-provider code copied
-into the app.
+**[Explore the live storefront](https://cravejs-web-template.vercel.app)**
+· [Run it locally](#run-the-bakery-preview)
+· [Documentation](https://docs.craveup.com)
+· [Storefront API contract](docs/contracts/STOREFRONT-API.md)
 
-**One restaurant-commerce core. Six visual directions. Two ways to run it.**
+Next.js 16 · React 19 · Tailwind CSS v4 · TypeScript · MIT
 
-Next.js 16 · React 19 · App Router · Tailwind v4 · TypeScript · pnpm · MIT
+## See the storefront
 
-> [!IMPORTANT]
-> This repository is a generated public snapshot. It is a release candidate: the local fixture
-> experience and both runtime profiles work today, while the public `crave` CLI generator and the
-> generated-project upgrade path have not shipped yet. Clone it to read, run and adapt the template;
-> do not treat a clone as a generated project.
+Meet **Leclerc Bakery**, the included Bakery Editorial visual preview. These are
+captures of the running template at desktop and mobile web sizes.
+
+<table>
+  <tr>
+    <th>Desktop</th>
+    <th>Mobile web</th>
+  </tr>
+  <tr>
+    <td valign="top"><a href="docs/images/storefront-desktop.webp"><img src="docs/images/storefront-desktop.webp" alt="Leclerc Bakery desktop storefront with a split editorial hero, golden pastries, and sample menu" width="660" /></a></td>
+    <td valign="top"><a href="docs/images/storefront-mobile.webp"><img src="docs/images/storefront-mobile.webp" alt="The same bakery storefront on mobile web, with stacked photography and content" width="190" /></a></td>
+  </tr>
+</table>
+
+Open the [live bakery storefront](https://cravejs-web-template.vercel.app) and resize
+your browser to explore its responsive layout, or select either screenshot to view it at full size.
+
+Leclerc Bakery and its menu are fictional; the food photography is AI-generated.
+This preset demonstrates the responsive design. The separate ordering fixtures let
+you explore menus, modifiers, carts, pickup, delivery, and checkout handoff without
+credentials or live orders.
+
+## Run the bakery preview
+
+Use **Node.js 24** and **pnpm 10.33.2**. No Crave credentials are needed.
+
+```bash
+git clone https://github.com/craveup-oss/cravejs-web-template.git
+cd cravejs-web-template
+corepack enable
+pnpm install --frozen-lockfile
+pnpm dev:fixtures --profile standalone-cli --tenant fixture-base
+```
+
+Open **[the bakery preview](http://localhost:3000/design-system-preview?preset=bakery-editorial&controls=0)**
+to see the pictured storefront. Resize your browser to explore its mobile layout.
+
+Open **[the ordering fixtures](http://localhost:3000)** to try the separate sample
+ordering flow. Fixture mode is labeled **NO LIVE ORDERS**, makes no live API
+requests, and disables Google Maps lookups even if a local environment contains a
+browser key.
+
+### Hosted design demo
+
+The public demo deploys this repository's `main` branch to the Crave Vercel project
+`cravejs-web-template` with Node.js 24. Its project settings enable
+`DESIGN_SYSTEM_PREVIEW=1`, `STOREFRONT_PROFILE=hosted-multitenant`, and
+`STOREFRONT_HOSTED_TENANTS_JSON={}`. The empty registry configures no live merchants;
+the existing design preview renders repository-owned sample content. In this mode,
+the root URL redirects to the bakery preview. Keep the preview flag unset for a
+merchant storefront. The demo is a visual sample, not a live ordering service.
+
+To adapt the bakery, start with its [sample content](src/presets/bakery-preview-data.ts),
+[preset configuration](src/presets/storefront-presets.ts), and
+[photography](public/assets/template/BAKERY-PHOTOGRAPHY.md).
+
+> **Release status:** this is a public template preview with two runtime profiles.
+> The public `crave` CLI generator and generated-project upgrade path have not
+> shipped. Clone the source to run and adapt it; live ordering requires restaurant
+> configuration and API access.
 
 ## Why teams start here
 
@@ -30,28 +86,6 @@ Next.js 16 · React 19 · App Router · Tailwind v4 · TypeScript · pnpm · MIT
 The result is room for a distinctive restaurant experience without forking the commerce logic every
 time the visual direction changes.
 
-## Try the storefront locally
-
-You can explore the complete fixture storefront without Crave credentials and without making a live
-API request.
-
-### Prerequisites
-
-- Node.js 24 (see [`.nvmrc`](.nvmrc))
-- pnpm 10.33.2 (pinned in [`package.json`](package.json))
-
-```bash
-git clone https://github.com/craveup/cravejs-web-template.git
-cd cravejs-web-template
-corepack enable
-pnpm install --frozen-lockfile
-pnpm dev:fixtures --profile standalone-cli --tenant fixture-base
-```
-
-Open [http://localhost:3000](http://localhost:3000). The fixture runtime is labeled in the UI and
-stays zero-network, so it is safe for design exploration and contribution work. Fixture commands
-disable Google Maps lookups even when a local environment file contains a browser key.
-
 ## Choose a visual direction
 
 The template ships six generated theme systems—`base`, `ember`, `hearth`, `meadow`, `noir` and
@@ -62,10 +96,13 @@ Use a theme as the starting point, then change documented theme inputs, public f
 merchant content and exported composition slots. A visual concept does not need its own copy of the
 SDK integration, cart or checkout code.
 
-### Placeholder imagery
+### Bakery preview and imagery
 
-This public template ships neutral, repository-owned SVG placeholders instead of licensed
-photography. Every shipped asset is recorded with its SHA-256 digest in
+The Bakery Editorial preset includes AI-generated bakery photography and fictional
+Leclerc Bakery sample content. Run the fixture server, then open
+`/design-system-preview?preset=bakery-editorial&controls=0` to explore the responsive
+visual preview. Ordering tests continue to use the canonical fixture menu. Other
+presets ship repository-authored SVG placeholders. Every shipped asset is recorded with its SHA-256 digest in
 [`distribution/asset-ownership.json`](distribution/asset-ownership.json), and the release gate rejects
 any image whose rights are not confirmed. Replace the placeholders with your own photography.
 

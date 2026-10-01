@@ -49,12 +49,12 @@ const FORBIDDEN_PATH_PATTERNS = [
 const FORBIDDEN_CONTENT_PATTERNS = [
   { code: "INTERNAL_DEV_HOST", pattern: /dev-api-[0-9]{6,}\.craveup\.com/u },
   { code: "CLERK_DEV_INSTANCE", pattern: /[a-z0-9-]+\.clerk\.accounts\.dev/u },
-  // Production and the approved external sandbox origin are public. Other
+  // The developer website, production and approved external sandbox origin are public. Other
   // development, preview, staging, internal, or guessed sandbox hosts are not.
   {
     code: "UNFINALIZED_CRAVEUP_HOST",
     pattern:
-      /\b(?:(?:staging|dev|preview|internal)[a-z0-9-]*|sandbox(?!-api\.craveup\.com\b)[a-z0-9-]*)\.craveup\.com/u,
+      /\b(?!developer\.craveup\.com\b)(?:(?:staging|dev|preview|internal)[a-z0-9-]*|sandbox(?!-api\.craveup\.com\b)[a-z0-9-]*)\.craveup\.com/u,
   },
 ];
 
