@@ -17,7 +17,7 @@ on:
         required: true
         type: string
       confirm_repository:
-        description: Type craveup/cravejs-web-template to authorize publication
+        description: Type craveup-oss/cravejs-web-template to authorize publication
         required: true
         type: string
 
@@ -66,7 +66,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          test "$GITHUB_REPOSITORY" = "craveup/cravejs-web-template"
+          test "$GITHUB_REPOSITORY" = "craveup-oss/cravejs-web-template"
           test "$CONFIRM_REPOSITORY" = "$GITHUB_REPOSITORY"
           printf '%s' "$EXPECTED_COMMIT" | grep -Eq '^[0-9a-f]{40}$'
           printf '%s' "$EVIDENCE_URL" | grep -Eq '^https://[^[:space:]]+$'
@@ -78,7 +78,7 @@ jobs:
 
       - name: Require protected public-release settings
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.RELEASE_ADMIN_READ_TOKEN }}
         run: node scripts/verify-public-release-settings.mjs
 
       # Everything below this line may execute third-party code. No token is in
@@ -159,6 +159,11 @@ jobs:
           test "$(sha256sum "$artifact" | cut -d ' ' -f 1)" = "$EXPECTED_ARTIFACT_SHA256"
           test "$(sha256sum "$manifest" | cut -d ' ' -f 1)" = "$EXPECTED_MANIFEST_SHA256"
           test "$(jq -r .templateCommit "$manifest")" = "$EXPECTED_COMMIT"
+
+      - name: Recheck protected public-release settings
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_ADMIN_READ_TOKEN }}
+        run: node scripts/verify-public-release-settings.mjs
 
       - name: Recheck main and create the immutable release
         shell: bash

@@ -67,7 +67,9 @@ function ScopedCheckoutIdentityRoute(props: CheckoutIdentityRouteProps) {
       <PickupCheckoutPreflight
         adjustmentRuntime={props.adjustmentRuntime}
         backHref={props.backHref}
+        checkoutConfig={props.checkoutConfig}
         gratuity={props.gratuity}
+        handoffRuntime={props.handoffRuntime}
         identity={identity}
         locationAddress={props.locationAddress}
         locationId={props.locationId}

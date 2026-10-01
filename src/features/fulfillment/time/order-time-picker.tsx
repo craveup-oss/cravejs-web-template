@@ -26,6 +26,7 @@ export type OrderTimeState =
   | "closed"
   | "conflict"
   | "expired"
+  | "missing"
   | "immutable"
   | "rate-limited"
   | "processing"
@@ -62,6 +63,7 @@ const stateCopy: Partial<Record<OrderTimeState, string>> = {
   closed: "Pick a returned time and we will have it ready when ordering resumes.",
   conflict: "The order changed elsewhere. Refresh the order before choosing a time again.",
   expired: "This order has expired. Start a new order to choose an order time.",
+  missing: "Start an order from the menu before choosing a time.",
   immutable: "The order time can no longer be changed.",
   "rate-limited": "Order-time updates are temporarily rate limited.",
   processing: "Your order-time update is still being processed.",
@@ -102,6 +104,7 @@ function OrderTimePickerState({
     effectiveState === "pending" ||
     effectiveState === "conflict" ||
     effectiveState === "expired" ||
+    effectiveState === "missing" ||
     effectiveState === "immutable" ||
     effectiveState === "error" ||
     retryRemaining > 0 ||

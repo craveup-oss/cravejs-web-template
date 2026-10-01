@@ -1,6 +1,7 @@
 "use client";
 
 import type { StorefrontCart } from "@craveup/storefront-sdk";
+import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { flushSync } from "react-dom";
 
@@ -19,10 +20,13 @@ export type SetTableAction = (
 export function TableConfirmation({
   initialTableIdentifier = "",
   locationLabel,
+  menuHrefFor,
   onSubmit,
 }: {
   initialTableIdentifier?: string;
   locationLabel?: string;
+  /** Menu destination for a table the cart has confirmed. */
+  menuHrefFor?: (tableNumber: string) => string;
   onSubmit?: SetTableAction;
 }) {
   const hydrated = useHydrated();
@@ -131,16 +135,22 @@ export function TableConfirmation({
         <p className={styles.preview}>
           PREVIEW ONLY — table detail persistence awaits platform evidence.
         </p>
-        <button
-          className={styles.submit}
-          type="submit"
-          aria-label={pending ? "Confirming…" : "Start my own tab"}
-          disabled={!hydrated || pending || !onSubmit}
-        >
-          {pending
-            ? "Confirming…"
-            : `Start my own tab${tableIdentifier.trim() ? ` at Table ${tableIdentifier.trim()}` : ""}`}
-        </button>
+        {confirmedTableNumber && menuHrefFor ? (
+          <Link className={styles.submit} href={menuHrefFor(confirmedTableNumber)}>
+            Continue to the menu
+          </Link>
+        ) : (
+          <button
+            className={styles.submit}
+            type="submit"
+            aria-label={pending ? "Confirming…" : "Start my own tab"}
+            disabled={!hydrated || pending || !onSubmit}
+          >
+            {pending
+              ? "Confirming…"
+              : `Start my own tab${tableIdentifier.trim() ? ` at Table ${tableIdentifier.trim()}` : ""}`}
+          </button>
+        )}
       </form>
     </main>
   );

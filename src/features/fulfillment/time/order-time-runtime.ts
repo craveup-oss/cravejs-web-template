@@ -88,7 +88,7 @@ export async function updateOrderTime(
       : runtime.merchantSlug;
   const sessionStore = sessionModule.createMerchantCartSessionStore(merchantSlug);
   const stored = await sessionStore.get(locationId);
-  if (!stored) return { state: "expired" };
+  if (!stored) return { state: "missing" };
   for (const [cachedScope, cachedAttempt] of orderTimeAttempts) {
     if (
       cachedAttempt.merchantSlug === merchantSlug &&

@@ -25,7 +25,7 @@
   "properties": {
     "schemaVersion": { "const": 1 },
     "id": { "const": "web" },
-    "repository": { "const": "craveup/cravejs-web-template" },
+    "repository": { "const": "craveup-oss/cravejs-web-template" },
     "platform": { "const": "web" },
     "profile": { "const": "standalone-cli" },
     "templateRelease": {

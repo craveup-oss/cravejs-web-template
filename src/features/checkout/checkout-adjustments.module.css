@@ -14,8 +14,7 @@
 .section p,
 .notice,
 .error,
-.status,
-.secureNote {
+.status {
   margin: 0;
 }
 
@@ -25,8 +24,7 @@
 
 .section p,
 .notice,
-.status,
-.secureNote {
+.status {
   color: var(--color-text-secondary);
   font-size: var(--text-body-sm);
 }

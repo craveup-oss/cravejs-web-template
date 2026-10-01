@@ -45,7 +45,7 @@
 }
 
 .preview {
-  color: var(--color-status-warning);
+  color: var(--color-text-secondary);
   font-size: var(--text-label-sm);
   font-weight: var(--font-body-strong);
   text-transform: uppercase;

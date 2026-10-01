@@ -1489,11 +1489,18 @@ html[dir="rtl"] .navigation-drawer {
   }
 
   .storefront-grid {
-    grid-template-columns: 150px minmax(0, 1fr);
     gap: var(--shell-desktop-gap);
   }
 
+  .storefront-grid[data-has-leading="true"] {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
   .storefront-grid[data-has-rail="true"] {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, var(--shell-order-rail-width));
+  }
+
+  .storefront-grid[data-has-leading="true"][data-has-rail="true"] {
     grid-template-columns: 150px minmax(0, 1fr) minmax(260px, var(--shell-order-rail-width));
   }
 
@@ -2330,3 +2337,5 @@ html[dir="rtl"] .navigation-drawer {
   border-radius: 4px;
   padding-inline: 28px;
 }
+
+.sandbox-demo-banner { padding: 10px 16px; text-align: center; font-size: 13px; background: #30271f; color: #fff8ee; }

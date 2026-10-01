@@ -1,0 +1,30 @@
+name: Verify public storefront
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
+        with:
+          version: 10.33.2
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify
+      - run: pnpm build
+        env:
+          STOREFRONT_PROFILE: standalone-cli
+          NEXT_PUBLIC_CRAVEUP_API_URL: https://sandbox-api.craveup.com
+          NEXT_PUBLIC_CRAVEUP_MERCHANT_SLUG: leclerc-bakery-external-demo
+          NEXT_PUBLIC_CRAVEUP_LOCATION_ID: 9d385370-f553-4e7c-85a4-2e4b3e7bcb3f
+          NEXT_PUBLIC_CRAVEUP_CHECKOUT_ORIGIN: https://checkout.sandbox.order.page
+          STOREFRONT_CANONICAL_ORIGIN: https://leclerc-bakery.order.page

@@ -75,7 +75,10 @@ caret range for the first release.
 |---|---|---:|---|
 | `STOREFRONT_PROFILE` | server, public config | yes | Exact `hosted-multitenant` or `standalone-cli` bootstrap selection |
 | `STOREFRONT_HOSTED_TENANTS_JSON` | server, public config | hosted only | Trusted exact-host to validated tenant-config registry; never browser-exposed |
-| `STOREFRONT_STANDALONE_CONFIG_JSON` | server, public config | standalone only | One validated immutable generated-project config; never reads the hosted registry |
+| `NEXT_PUBLIC_CRAVEUP_MERCHANT_SLUG` | public | standalone | Merchant slug |
+| `NEXT_PUBLIC_CRAVEUP_LOCATION_ID` | public | standalone | Default opaque location ID; verified against merchant before entry redirect |
+| `NEXT_PUBLIC_CRAVEUP_CHECKOUT_ORIGIN` | public | standalone | Exact HTTPS checkout origin |
+| `STOREFRONT_CANONICAL_ORIGIN` | server, public config | production override | HTTPS canonical origin, otherwise taken from typed standalone settings |
 | `NEXT_PUBLIC_CRAVEUP_API_URL` | public | yes | Explicit public API origin; must equal resolved `apiBaseUrl`; the SDK adds `/api/v1/storefront` |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | public, domain/API restricted | delivery | Google Places/maps browser integration |
 | `STOREFRONT_DELIVERY_RADIUS_MILES` | server, non-secret | no | Positive template/merchant delivery-radius policy; defaults to `5` miles and is always labeled as storefront policy, not API serviceability |
@@ -90,6 +93,11 @@ never inferred from a prepare response. There is no Stripe/provider configuratio
 Merchant, canonical origin, theme, locale, timezone, assets, checkout origins, and capabilities come
 only from the validated selected profile config. URL/query overrides and merchant-only production
 fallbacks are rejected.
+
+The optional validated `presetId` selects one repository-owned presentation preset on the real
+menu route. Set it in trusted hosted configuration or standalone project settings, never from a
+production query parameter. It changes composition only; merchant identity, menu/product IDs,
+photos, prices, cart and checkout continue to use the configured API. Omit it for the base layout.
 
 Remote merchant/catalog images are restricted by exact Next.js `images.remotePatterns` committed at
 Gate 0 from the baseline's `assetOrigins`. An honest empty array is valid and produces no remote
@@ -400,3 +408,13 @@ Expected results:
 
 Until all expected results are recorded, only the corresponding live claims remain gated. Exact-SDK
 adapters, canonical fixtures, anonymous reads, and unrelated consumer work may proceed.
+
+### Default entry location routability
+
+The public API identifier remains an opaque 1–128 character string. This template's default entry
+setting additionally excludes exactly `.` and `..`: URL clients normalize these dot segments,
+including percent-encoded forms, before reaching the dynamic route. Configuration fails with an
+explicit error for these two values instead of redirecting indefinitely. All other identifiers keep
+their exact value and are URL-encoded on entry after merchant membership is verified. This is a
+template entry-route limitation, not a change to the SDK/OpenAPI identifier schema. The generator
+must validate this entry constraint before emitting the environment file.

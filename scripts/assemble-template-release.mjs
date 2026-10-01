@@ -194,7 +194,7 @@ export function assembleTemplateRelease(
     const manifest = {
       schemaVersion: 1,
       id: "web",
-      repository: "craveup/cravejs-web-template",
+      repository: "craveup-oss/cravejs-web-template",
       platform: "web",
       profile: "standalone-cli",
       templateRelease,

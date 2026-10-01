@@ -154,6 +154,13 @@
   }
 }
 
+a.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .submit:disabled {
   background: var(--color-surface-sunken);
   color: var(--color-text-muted);

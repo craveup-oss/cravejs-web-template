@@ -14,7 +14,9 @@
     "release:assemble": "node scripts/assemble-template-release.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "verify": "pnpm lint && pnpm typecheck"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test",
+    "test": "vitest run && node --test scripts/verify-sandbox-demo.test.mjs scripts/verify-distribution-hosts.test.mjs",
+    "verify:sandbox-demo": "node scripts/verify-sandbox-demo.mjs"
   },
   "dependencies": {
     "@craveup/storefront-sdk": "2.0.1",
@@ -23,7 +25,7 @@
     "@radix-ui/react-dialog": "^1.1.23",
     "@swc/helpers": "0.5.15",
     "lucide-react": "^1.31.0",
-    "next": "16.3.0",
+    "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.85.0",
@@ -48,7 +50,7 @@
     "postcss": "^8.5.26",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "packageManager": "pnpm@10.33.2"
 }

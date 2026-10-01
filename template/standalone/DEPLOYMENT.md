@@ -7,7 +7,8 @@ hosting credentials.
 ## Production Configuration
 
 - Set `STOREFRONT_PROFILE` to `standalone-cli`.
-- Supply one validated `STOREFRONT_STANDALONE_CONFIG_JSON` value.
+- Supply the four `NEXT_PUBLIC_CRAVEUP_*` settings from `.env.example`.
+- Set `STOREFRONT_CANONICAL_ORIGIN` to the exact deployed HTTPS storefront origin.
 - Set `NEXT_PUBLIC_CRAVEUP_API_URL` to the same exact origin as config `apiBaseUrl`.
 - Use exact HTTPS canonical, API, asset, and hosted-checkout origins.
 - Restrict the optional Google Maps browser key by deployed domain and required APIs.

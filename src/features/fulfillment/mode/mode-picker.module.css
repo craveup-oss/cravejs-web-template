@@ -91,7 +91,8 @@
   background: var(--color-surface-raised);
 }
 
-.action button {
+.action button,
+.action a {
   display: flex;
   width: min(100%, 640px);
   min-height: calc(var(--size-tap-target) + var(--space-2));
@@ -106,6 +107,10 @@
   font: inherit;
   font-weight: var(--font-body-strong);
   cursor: pointer;
+}
+
+.action a {
+  text-decoration: none;
 }
 
 .action button:disabled {

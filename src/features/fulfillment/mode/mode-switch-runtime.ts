@@ -78,6 +78,48 @@ function wireMode(mode: FulfillmentMode) {
       : mode;
 }
 
+/**
+ * Reads the fulfillment detail of this tab's scoped cart without changing it.
+ * Returns null when the tab has no cart for the location or the fixture cart no longer matches.
+ */
+export async function readCurrentFulfillmentDetail(
+  runtime: ModeSwitchRuntime,
+  locationId: string,
+): Promise<FulfillmentDetail | null> {
+  const [sessionModule, customerSessionModule] = await Promise.all([
+    import("@/lib/storefront/session-store"),
+    import("@/lib/storefront/customer-session"),
+  ]);
+  const merchantSlug =
+    runtime.mode === "fixture"
+      ? runtime.runtime.config.merchantSlug
+      : runtime.merchantSlug;
+  const sessionStore = sessionModule.createMerchantCartSessionStore(merchantSlug);
+  const stored = await sessionStore.get(locationId);
+  if (!stored) return null;
+
+  if (runtime.mode === "fixture") {
+    const snapshotModule = await import("@/fixtures/cart-snapshot");
+    const snapshot = snapshotModule.readFixtureCartSnapshot(merchantSlug, locationId);
+    return snapshot && snapshot.id === stored.cartId ? detailFromCart(snapshot) : null;
+  }
+
+  const [clientModule, cartModule] = await Promise.all([
+    import("@/lib/storefront/browser-client"),
+    import("@/lib/storefront/cart-actions"),
+  ]);
+  const customerToken = customerSessionModule.getCustomerToken(merchantSlug);
+  const client = clientModule.createBrowserStorefrontClient({
+    getAuthToken: () => customerToken,
+    sessionStore,
+  });
+  const cart = await cartModule.createStorefrontCartActions(client).get({
+    locationId,
+    cartId: stored.cartId,
+  });
+  return detailFromCart(cart);
+}
+
 export async function switchFulfillmentMode(
   runtime: ModeSwitchRuntime,
   locationId: string,

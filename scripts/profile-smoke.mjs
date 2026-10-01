@@ -1,3 +1,4 @@
+import { standaloneSettings } from "../src/config/standalone-settings.ts";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { request as httpRequest } from "node:http";
@@ -7,25 +8,10 @@ import { pathToFileURL } from "node:url";
 const supportedProfiles = new Set(["hosted-multitenant", "standalone-cli"]);
 
 function standaloneHost(environment) {
-  const rawConfiguration = environment.STOREFRONT_STANDALONE_CONFIG_JSON;
-  if (!rawConfiguration) return undefined;
-  let configuration;
-  try {
-    configuration = JSON.parse(rawConfiguration);
-  } catch {
-    throw new Error("profile:smoke requires valid standalone configuration.");
-  }
-  if (
-    typeof configuration !== "object" ||
-    configuration === null ||
-    Array.isArray(configuration) ||
-    typeof configuration.canonicalOrigin !== "string"
-  ) {
-    throw new Error("profile:smoke requires valid standalone configuration.");
-  }
+  const canonicalOrigin = environment.STOREFRONT_CANONICAL_ORIGIN ?? standaloneSettings.canonicalOrigin;
   let origin;
   try {
-    origin = new URL(configuration.canonicalOrigin);
+    origin = new URL(canonicalOrigin);
   } catch {
     throw new Error("profile:smoke requires a canonical standalone origin.");
   }
