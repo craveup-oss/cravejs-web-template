@@ -6,6 +6,7 @@ import { StorefrontHeader } from "@/components/shell/storefront-header";
 import { StorefrontSkipLink } from "@/components/shell/storefront-skip-link";
 import { loadStorePicker } from "@/features/fulfillment/stores/load-store-picker";
 import { StoreList } from "@/features/fulfillment/stores/store-list";
+import { StorefrontNotOpen } from "@/features/status/storefront-not-open";
 import { readAccountPageRuntime } from "@/features/status/account-page";
 import { readRequestStorefrontRuntime } from "@/lib/tenant/server-storefront-runtime";
 import {
@@ -67,11 +68,10 @@ export default async function StoresPage() {
   if (!runtime) notFound();
 
   let outcome:
-    | { readonly data: NonNullable<Awaited<ReturnType<typeof loadStorePicker>>> }
+    | { readonly data: Awaited<ReturnType<typeof loadStorePicker>> }
     | { readonly error: StorefrontStoreDirectoryError };
   try {
     const data = await loadStorePicker(runtime);
-    if (!data) notFound();
     outcome = { data };
   } catch (error) {
     if (!(error instanceof StorefrontStoreDirectoryError)) throw error;
@@ -91,6 +91,10 @@ export default async function StoresPage() {
   }
 
   const { data } = outcome;
+  if (runtime.mode === "live" && (!data || data.stores.length === 0)) {
+    return <StorefrontNotOpen retryHref="/stores" />;
+  }
+  if (!data) notFound();
   const firstLocationId = data.stores[0]?.id;
   return (
     <div className="storefront-shell" data-variant="store-picker">

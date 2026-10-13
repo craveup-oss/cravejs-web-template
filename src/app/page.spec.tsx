@@ -85,3 +85,13 @@ it("does not disguise unexpected application errors as a timeout", async () => {
   getMerchant.mockRejectedValueOnce(new Error("unexpected bug"));
   await expect(Home()).rejects.toThrow("unexpected bug");
 });
+
+it.each([null, { locations: [] }])("shows a closed storefront for a configured merchant with no public locations: %j", async (merchant) => {
+  for (const [key, value] of Object.entries(standaloneEnvironment)) vi.stubEnv(key, value);
+  getMerchant.mockResolvedValueOnce(merchant);
+  const html = renderToStaticMarkup(await Home());
+  expect(html).toContain("This store isn’t open yet");
+  expect(html).toContain("Check again");
+  expect(redirectSpy).not.toHaveBeenCalled();
+  expect(notFoundSpy).not.toHaveBeenCalled();
+});

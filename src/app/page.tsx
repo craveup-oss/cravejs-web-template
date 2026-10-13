@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 
+import { StorefrontNotOpen } from "@/features/status/storefront-not-open";
+
 import { Button } from "@/components/ui/button";
 import { StorefrontStoreDirectoryError } from "@/lib/storefront/store-directory";
 
@@ -28,7 +30,10 @@ export default async function Home() {
         </main>
       );
     }
-    if (!merchant?.locations.some((location) => location.id === runtime.defaultLocationId)) {
+    if (!merchant || merchant.locations.length === 0) {
+      return <StorefrontNotOpen retryHref="/" />;
+    }
+    if (!merchant.locations.some((location) => location.id === runtime.defaultLocationId)) {
       notFound();
     }
     return redirect(`/${encodeURIComponent(runtime.defaultLocationId)}`);

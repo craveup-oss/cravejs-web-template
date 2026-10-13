@@ -20,3 +20,15 @@ Baseline verification in the restored checkout: frozen dependency install passed
 15 Vitest files/87 tests and 23 release-script tests passed. This is local source
 verification, not a new image acceptance or deployed behavior claim. No push,
 publication, deployment, merchant data mutation or provider change was performed.
+
+## Publication UX follow-up
+
+Configured live tenants with no public merchant/locations now show “This store
+isn’t open yet” with a reload action at the root and location picker. Foreign
+location membership still fails closed; unknown tenant routing remains 404;
+directory outages retain a retry error rather than being mislabeled unpublished.
+This uses only the public directory; no draft catalog is fetched or exposed.
+
+Local verification: 16 Vitest files / 93 tests plus 23 release checks pass;
+ESLint and TypeScript pass after Next route type generation. Hosted acceptance
+and the merchant publication-to-order journey remain unrun for this change.
