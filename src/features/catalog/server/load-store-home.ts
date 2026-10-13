@@ -64,12 +64,18 @@ export async function loadStoreHomeData(
   locationId: string,
   source: CatalogSource,
 ): Promise<StoreHomeData> {
-  const [location, menuBundle] = await Promise.all([
+  const [locationResult, menuResult] = await Promise.allSettled([
     source.locations.getById(locationId),
     source.menus.list(locationId, { menuOnly: true }),
   ]);
 
+  // Both requests stay parallel, but a menu rejection must not mask the
+  // authoritative missing-location result for a foreign or unknown store.
+  if (locationResult.status === "rejected") throw locationResult.reason;
+  const location = locationResult.value;
   if (!location) throw new CatalogNotFoundError(locationId);
+  if (menuResult.status === "rejected") throw menuResult.reason;
+  const menuBundle = menuResult.value;
 
   return {
     location,
