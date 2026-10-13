@@ -38,6 +38,9 @@ export interface CartMessages {
   pickupFeeLabel: string;
   roomServiceFeeLabel: string;
   taxLabel: string;
+  tipLabel: string;
+  serviceFeeLabel: string;
+  enterpriseFeeLabel: string;
   checkoutLabel: (formattedTotal: string) => string;
   tableside: TablesideCartMessages;
 }
@@ -73,6 +76,9 @@ const enUsCartMessages: CartMessages = {
   pickupFeeLabel: "Pickup — no fee",
   roomServiceFeeLabel: "Service charge",
   taxLabel: "Tax",
+  tipLabel: "Tip",
+  serviceFeeLabel: "Service fee",
+  enterpriseFeeLabel: "Platform fee",
   checkoutLabel: (formattedTotal) => `Checkout · ${formattedTotal}`,
   tableside: {
     sourceLabel: "Your cart from",

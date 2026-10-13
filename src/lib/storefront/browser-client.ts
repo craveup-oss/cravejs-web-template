@@ -23,7 +23,7 @@ export function createBrowserStorefrontClient(
 ) {
   return createStorefrontClient({
     baseUrl: resolveStorefrontApiBaseUrl(
-      process.env.NEXT_PUBLIC_CRAVEUP_API_URL,
+      document.documentElement.dataset.craveApiOrigin,
     ),
     getAuthToken: options.getAuthToken ?? getCustomerToken,
     sessionStore: options.sessionStore ?? browserCartSessionStore,
@@ -35,5 +35,3 @@ export function createBrowserStorefrontCheckoutActions(merchantSlug: string) {
   const client = createBrowserStorefrontClient({ sessionStore });
   return createStorefrontCheckoutActions(client, merchantSlug, sessionStore);
 }
-
-export const storefrontClient = createBrowserStorefrontClient();

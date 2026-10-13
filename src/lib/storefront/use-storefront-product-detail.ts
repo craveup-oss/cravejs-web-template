@@ -3,6 +3,7 @@
 import useSWR from "swr";
 
 import { resolveStorefrontApiBaseUrl } from "./config";
+import { useStorefrontApiOrigin } from "./public-api-origin";
 import {
   StorefrontCatalogReadError,
   createStorefrontCatalogReader,
@@ -40,8 +41,8 @@ export interface UseStorefrontProductDetailOptions {
 const liveProductReader: Pick<StorefrontCatalogReader, "products"> = {
   products: {
     async get(locationId, productId) {
-      const { storefrontClient } = await import("./browser-client");
-      return createStorefrontCatalogReader(storefrontClient).products.get(
+      const { createBrowserStorefrontClient } = await import("./browser-client");
+      return createStorefrontCatalogReader(createBrowserStorefrontClient()).products.get(
         locationId,
         productId,
       );
@@ -49,8 +50,8 @@ const liveProductReader: Pick<StorefrontCatalogReader, "products"> = {
   },
 };
 
-function liveCacheScope(): string {
-  const apiOrigin = resolveStorefrontApiBaseUrl();
+function liveCacheScope(origin: string | null): string {
+  const apiOrigin = resolveStorefrontApiBaseUrl(origin ?? undefined);
   const merchant = getActiveStorefrontMerchant() ?? "anonymous";
   return `${apiOrigin}|${merchant}`;
 }
@@ -80,7 +81,8 @@ export function useStorefrontProductDetail(
     reader = liveProductReader,
   }: UseStorefrontProductDetailOptions = {},
 ): StorefrontProductDetailResource {
-  const scope = enabled ? (cacheScope ?? liveCacheScope()) : "disabled";
+  const apiOrigin = useStorefrontApiOrigin();
+  const scope = enabled ? (cacheScope ?? liveCacheScope(apiOrigin)) : "disabled";
   const resource = useSWR(
     enabled
       ? ["storefront-product-detail", scope, locationId, productId]

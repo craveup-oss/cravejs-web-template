@@ -112,14 +112,5 @@ export async function resolveStorefrontRuntime(
     environment,
   ).resolve(request);
 
-  if (
-    config &&
-    processEnvironment.NEXT_PUBLIC_CRAVEUP_API_URL !== config.apiBaseUrl
-  ) {
-    throw new StorefrontRuntimeError(
-      "NEXT_PUBLIC_CRAVEUP_API_URL must exactly match the resolved storefront config apiBaseUrl so server and browser SDK clients share one public API origin.",
-    );
-  }
-
   return config ? { mode: "live", config } : null;
 }

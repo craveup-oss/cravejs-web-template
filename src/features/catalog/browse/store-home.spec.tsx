@@ -10,7 +10,7 @@ import { StoreHome } from "./store-home";
 afterEach(cleanup);
 
 describe("StoreHome", () => {
-  it("keeps bakery product destinations and backend order in the featured menu", async () => {
+  it("keeps bakery product destinations and backend order in category cards", async () => {
     const source = await loadStoreHomeData("demo", fixtureCatalogSource);
     const items = source.featuredItems.slice(0, 2).map((item, index) => ({
       ...item,
@@ -18,8 +18,8 @@ describe("StoreHome", () => {
       name: index === 0 ? "Butter croissant" : "Pain au chocolat",
       href: `/bakery-location/items/bakery-product-${index}`,
     }));
-    const { container } = render(<StoreHome data={{ ...source, featuredItems: items }} variant="home" visualPreset={resolveStorefrontPreset("bakery-editorial")} />);
-    const featured = container.querySelector<HTMLElement>("#most-ordered")!;
+    const { container } = render(<StoreHome data={{ ...source, categories: [{ ...source.categories[0], items }] }} variant="home" visualPreset={resolveStorefrontPreset("bakery-editorial")} />);
+    const featured = container.querySelector<HTMLElement>(".category-sections")!;
     expect(within(featured).getAllByRole("heading", { level: 3 }).map(({ textContent }) => textContent)).toEqual(items.map((item) => item.name));
     for (const item of items) expect(featured.querySelector(`a[href="${item.href}"]`)).not.toBeNull();
   });

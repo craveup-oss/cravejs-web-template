@@ -58,12 +58,12 @@ export async function loadOrderTimes(input: {
           estimatedReadyTime: "12–22 minutes",
         };
   } else {
-    const { storefrontServerClient } = await import(
+    const { getStorefrontServerClient } = await import(
       "@/lib/storefront/server-client"
     );
     [times, readiness] = await Promise.all([
-      storefrontServerClient.locations.getOrderTimes(input.locationId),
-      storefrontServerClient.locations.getOrderingReadiness(
+      (await getStorefrontServerClient()).locations.getOrderTimes(input.locationId),
+      (await getStorefrontServerClient()).locations.getOrderingReadiness(
         input.locationId,
         "takeout",
       ),

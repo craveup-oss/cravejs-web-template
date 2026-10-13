@@ -22,6 +22,9 @@ import {
   parseFixtureCartRevision,
 } from "@/fixtures/tableside-cart-adapter";
 import { storefrontPrivateRobots } from "@/lib/tenant/storefront-seo";
+import { readRequestStorefrontRuntime } from "@/lib/tenant/server-storefront-runtime";
+import { loadFulfillmentLocation } from "@/features/fulfillment/server/load-fulfillment-location";
+import { LiveCartPage } from "@/features/cart/live-cart-page";
 
 export const metadata: Metadata = {
   title: "Your cart | Crave Storefront",
@@ -33,10 +36,18 @@ export default async function CartRoute({
   params,
   searchParams,
 }: PageProps<"/[locationId]/cart">) {
+  const [{ locationId }, query] = await Promise.all([params, searchParams]);
+  const runtime = await readRequestStorefrontRuntime();
+  if (!runtime) notFound();
+  if (runtime.mode === "live") {
+    const location = await loadFulfillmentLocation(locationId, null);
+    if (!location) notFound();
+    return <LiveCartPage merchantSlug={runtime.config.merchantSlug}
+      locale={runtime.config.locale} locationId={location.id}
+      location={{ name: location.restaurantDisplayName, addressLabel: location.addressString }} />;
+  }
   const fixtureRuntime = readFixtureRuntimeFromEnvironment();
   if (!fixtureRuntime) notFound();
-
-  const [{ locationId }, query] = await Promise.all([params, searchParams]);
   let data;
 
   try {

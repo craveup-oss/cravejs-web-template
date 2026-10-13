@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { CatalogErrorScreen } from "@/features/catalog/browse/catalog-error-screen";
 import { resolveStoreVariant } from "@/features/catalog/browse/resolve-store-variant";
+import { FulfillmentStatus } from "@/features/fulfillment/mode/fulfillment-status";
 import { StoreHome } from "@/features/catalog/browse/store-home";
 import {
   createCatalogSearchIndex,
@@ -110,6 +111,9 @@ export default async function StorePage({ params, searchParams }: StorePageProps
         visualPreset={requestRuntime?.config.presetId
           ? resolveStorefrontPreset(requestRuntime.config.presetId)
           : undefined}
+        fulfillmentSlot={<FulfillmentStatus locationId={locationId} runtime={fixtureRuntime
+          ? {mode: "fixture", runtime: fixtureRuntime}
+          : {mode: "live", merchantSlug: pageRuntime.merchantSlug}} />}
         entryContextSlot={
           <>
             <EntryBanner intent={intent} locationId={locationId} />

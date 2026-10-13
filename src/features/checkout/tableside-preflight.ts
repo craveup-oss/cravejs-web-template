@@ -1,4 +1,5 @@
-import type { StorefrontCart, StorefrontCustomer } from "@craveup/storefront-sdk";
+import type { CheckoutContact } from "./checkout-preflight";
+import type { StorefrontCart } from "@craveup/storefront-sdk";
 
 import {
   runCheckoutPreflight,
@@ -42,7 +43,7 @@ export function runTablesidePreflight(
   input: Readonly<{
     locationId: string;
     cartId: string;
-    customer: StorefrontCustomer;
+    customer: CheckoutContact;
     orderName?: string;
     expectedTableIdentifier: string;
     idempotencyKey: string;

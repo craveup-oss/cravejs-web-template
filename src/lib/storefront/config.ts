@@ -1,4 +1,4 @@
-const publicApiUrlEnvironmentVariable = "NEXT_PUBLIC_CRAVEUP_API_URL";
+const publicApiUrlEnvironmentVariable = "Storefront API origin";
 const loopbackHosts = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 
 export class StorefrontClientConfigError extends Error {
@@ -15,7 +15,7 @@ function fail(reason: string): never {
 }
 
 export function resolveStorefrontApiBaseUrl(
-  value: string | undefined = process.env.NEXT_PUBLIC_CRAVEUP_API_URL,
+  value: string | undefined,
 ): string {
   if (typeof value !== "string" || value.length === 0) {
     fail("a value is required");

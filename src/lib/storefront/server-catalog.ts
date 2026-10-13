@@ -6,6 +6,6 @@ import {
 } from "./catalog";
 
 export async function getStorefrontServerCatalogReader(): Promise<StorefrontCatalogReader> {
-  const { storefrontServerClient } = await import("./server-client");
-  return createStorefrontCatalogReader(storefrontServerClient);
+  const { getStorefrontServerClient } = await import("./server-client");
+  return createStorefrontCatalogReader((await getStorefrontServerClient()));
 }

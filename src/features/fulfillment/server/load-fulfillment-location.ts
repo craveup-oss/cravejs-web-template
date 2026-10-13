@@ -31,13 +31,13 @@ export async function loadFulfillmentLocation(
     const { fixtureLocation } = await import("@/fixtures/location");
     return locationId === fixtureLocation.id ? fixtureLocation : null;
   }
-  const { storefrontServerClient } = await import(
+  const { getStorefrontServerClient } = await import(
     "@/lib/storefront/server-client"
   );
   return resolveLiveFulfillmentLocation(
     locationId,
-    storefrontServerClient.locations.getById.bind(
-      storefrontServerClient.locations,
+    (await getStorefrontServerClient()).locations.getById.bind(
+      (await getStorefrontServerClient()).locations,
     ),
   );
 }

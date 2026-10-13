@@ -1,5 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
+import { StorefrontStoreDirectoryError } from "@/lib/storefront/store-directory";
+
 import { getStorefrontServerStoreDirectory } from "@/lib/storefront/server-store-directory";
 
 import { readRequestStorefrontRuntime } from "@/lib/tenant/server-storefront-runtime";
@@ -8,7 +11,23 @@ export default async function Home() {
   const runtime = await readRequestStorefrontRuntime();
   if (runtime?.mode === "live" && runtime.defaultLocationId) {
     const directory = await getStorefrontServerStoreDirectory();
-    const merchant = await directory.merchant.getBySlug(runtime.config.merchantSlug);
+    let merchant;
+    try {
+      merchant = await directory.merchant.getBySlug(runtime.config.merchantSlug);
+    } catch (error) {
+      if (!(error instanceof StorefrontStoreDirectoryError) || error.state !== "network-error") {
+        throw error;
+      }
+      return (
+        <main className="route-error" role="alert">
+          <h1>The menu is taking longer than expected</h1>
+          <p>We couldn’t connect to the restaurant. Please try again.</p>
+          <form action="/" method="get">
+            <Button type="submit">Try again</Button>
+          </form>
+        </main>
+      );
+    }
     if (!merchant?.locations.some((location) => location.id === runtime.defaultLocationId)) {
       notFound();
     }

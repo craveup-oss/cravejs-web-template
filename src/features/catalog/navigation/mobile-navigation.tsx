@@ -18,6 +18,7 @@ export interface CatalogNavigationProps {
   actionItems?: CatalogNavigationItem[];
   addressLabel?: string;
   cartLabel?: string;
+  cartHref?: string;
   desktopAction?: CatalogNavigationItem;
 }
 
@@ -42,6 +43,7 @@ export function CatalogNavigation({
   actionItems = [],
   addressLabel,
   cartLabel = "Cart",
+  cartHref,
   desktopAction,
 }: CatalogNavigationProps) {
   const [open, setOpen] = useState(false);
@@ -104,10 +106,13 @@ export function CatalogNavigation({
       <nav className="desktop-navigation" aria-label="Store navigation">
         <NavigationLinks items={items} />
       </nav>
-      <span className="header-cart" role="img" aria-label={cartLabel}>
+      {cartHref ? <Link className="header-cart" href={cartHref} aria-label={cartLabel}>
         <ShoppingBag aria-hidden="true" />
         <span className="header-cart-label">{cartLabel}</span>
-      </span>
+      </Link> : <span className="header-cart" role="img" aria-label={cartLabel}>
+        <ShoppingBag aria-hidden="true" />
+        <span className="header-cart-label">{cartLabel}</span>
+      </span>}
       {desktopAction ? (
         <Link className="header-desktop-action" href={desktopAction.href}>
           {desktopAction.label}

@@ -124,7 +124,7 @@ export async function applyDeliveryAddress(
     ) {
       deliveryAttempts.delete(scope);
       if (snapshot) {
-        await sessionModule.browserCartSessionStore.set({
+        if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
           merchantSlug,
           locationId,
           cartId: snapshot.id,
@@ -150,17 +150,17 @@ export async function applyDeliveryAddress(
     persistFixtureCart = (cart) =>
       snapshotModule.writeFixtureCartSnapshot(merchantSlug, cart);
   } else {
-    const [{ storefrontClient }, actionModule, cartModule] = await Promise.all([
+    const [{ createBrowserStorefrontClient }, actionModule, cartModule] = await Promise.all([
       import("@/lib/storefront/browser-client"),
       import("@/lib/storefront/fulfillment-actions"),
       import("@/lib/storefront/cart-actions"),
     ]);
-    actions = actionModule.createStorefrontFulfillmentActions(storefrontClient);
-    cartActions = cartModule.createStorefrontCartActions(storefrontClient);
+    actions = actionModule.createStorefrontFulfillmentActions(createBrowserStorefrontClient());
+    cartActions = cartModule.createStorefrontCartActions(createBrowserStorefrontClient());
   }
 
   const persist = async (cart: StorefrontCart) => {
-    await sessionModule.browserCartSessionStore.set({
+    if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
       merchantSlug,
       locationId,
       cartId: cart.id,

@@ -6,6 +6,6 @@ import {
 } from "./store-directory";
 
 export async function getStorefrontServerStoreDirectory(): Promise<StorefrontStoreDirectory> {
-  const { storefrontServerClient } = await import("./server-client");
-  return createStorefrontStoreDirectory(storefrontServerClient);
+  const { getStorefrontServerClient } = await import("./server-client");
+  return createStorefrontStoreDirectory((await getStorefrontServerClient()));
 }

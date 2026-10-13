@@ -132,7 +132,7 @@ export async function updateOrderTime(
       ) {
         orderTimeAttempts.delete(scope);
         if (snapshot) {
-          await sessionStore.set({
+          if (runtime.mode === "fixture") await sessionStore.set({
             merchantSlug,
             locationId,
             cartId: snapshot.id,
@@ -169,7 +169,7 @@ export async function updateOrderTime(
         locationId,
         cartId: attempt.cartId,
       });
-      await sessionStore.set({
+      if (runtime.mode === "fixture") await sessionStore.set({
         merchantSlug,
         locationId,
         cartId: refreshed.id,
@@ -194,7 +194,7 @@ export async function updateOrderTime(
       idempotencyKey: attempt.idempotencyKey,
       payload,
     });
-    await sessionStore.set({
+    if (runtime.mode === "fixture") await sessionStore.set({
       merchantSlug,
       locationId,
       cartId: result.cart.id,

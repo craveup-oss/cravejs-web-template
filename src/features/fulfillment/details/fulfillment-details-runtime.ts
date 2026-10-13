@@ -83,7 +83,7 @@ async function activeActions(
       snapshot.revision !== cart.revision
     ) {
       if (snapshot) {
-        await sessionModule.browserCartSessionStore.set({
+        if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
           merchantSlug,
           locationId,
           cartId: snapshot.id,
@@ -109,13 +109,13 @@ async function activeActions(
     persistFixtureCart = (returnedCart) =>
       snapshotModule.writeFixtureCartSnapshot(merchantSlug, returnedCart);
   } else {
-    const [{ storefrontClient }, actionModule, cartModule] = await Promise.all([
+    const [{ createBrowserStorefrontClient }, actionModule, cartModule] = await Promise.all([
       import("@/lib/storefront/browser-client"),
       import("@/lib/storefront/fulfillment-actions"),
       import("@/lib/storefront/cart-actions"),
     ]);
-    actions = actionModule.createStorefrontFulfillmentActions(storefrontClient);
-    cartActions = cartModule.createStorefrontCartActions(storefrontClient);
+    actions = actionModule.createStorefrontFulfillmentActions(createBrowserStorefrontClient());
+    cartActions = cartModule.createStorefrontCartActions(createBrowserStorefrontClient());
   }
 
   return {
@@ -124,7 +124,7 @@ async function activeActions(
     cart,
     merchantSlug,
     persist: async (returnedCart) => {
-      await sessionModule.browserCartSessionStore.set({
+      if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
         merchantSlug,
         locationId,
         cartId: returnedCart.id,

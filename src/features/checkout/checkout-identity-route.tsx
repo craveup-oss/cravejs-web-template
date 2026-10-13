@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import styles from "./checkout-identity.module.css";
 
 import type { CheckoutAdjustmentRuntime } from "./checkout-adjustment-runtime";
 import {
@@ -42,6 +45,7 @@ export function CheckoutIdentityRoute(props: CheckoutIdentityRouteProps) {
 }
 
 function ScopedCheckoutIdentityRoute(props: CheckoutIdentityRouteProps) {
+  const [signIn, setSignIn] = useState(false);
   const [identity, setIdentity] = useState<CheckoutIdentityResult | null>(null);
 
   if (identity) {
@@ -81,6 +85,28 @@ function ScopedCheckoutIdentityRoute(props: CheckoutIdentityRouteProps) {
       />
     );
   }
+  if (!signIn) return (
+    <section className={styles.surface} aria-label="Checkout details">
+      <div className={styles.content}>
+        <Link href={props.backHref}>Back to cart</Link>
+        <h1 className={styles.heading}>Your details</h1>
+        <p className={styles.description}>Continue as a guest. No account needed.</p>
+        <form onSubmit={(event) => {
+          event.preventDefault();
+          const data = new FormData(event.currentTarget);
+          const customerName = String(data.get("name") ?? "").trim();
+          const customerEmail = String(data.get("email") ?? "").trim();
+          if (!customerName || !customerEmail) return;
+          setIdentity({profile: {customerName, customerEmail, lastName: "", phoneNumber: null}});
+        }}>
+          <label className={styles.nameField}>Name<input name="name" autoComplete="name" required maxLength={100} /></label>
+          <label className={styles.nameField}>Email<input name="email" type="email" autoComplete="email" required maxLength={254} /></label>
+          <Button type="submit">Continue as guest</Button>
+        </form>
+        <button className={styles.resend} type="button" onClick={() => setSignIn(true)}>Sign in instead</button>
+      </div>
+    </section>
+  );
   return (
     <CheckoutIdentity
       merchantSlug={props.merchantSlug}

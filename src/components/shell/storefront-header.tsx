@@ -10,6 +10,7 @@ export interface StorefrontHeaderProps {
   actionItems?: CatalogNavigationItem[];
   addressLabel?: string;
   cartLabel?: string;
+  cartHref?: string;
   desktopAction?: CatalogNavigationItem;
 }
 

@@ -128,7 +128,7 @@ describe("storefront runtime", () => {
     ).rejects.toThrow(/STOREFRONT_PROFILE/);
   });
 
-  it("rejects a browser SDK API origin that disagrees with resolved config", async () => {
+  it("uses resolved tenant configuration instead of a compiled browser API origin", async () => {
     await expect(
       resolveStorefrontRuntime(
         { host: "tea.example.test", pathname: "/" },
@@ -141,6 +141,6 @@ describe("storefront runtime", () => {
           }),
         },
       ),
-    ).rejects.toThrow(/NEXT_PUBLIC_CRAVEUP_API_URL.*apiBaseUrl/);
+    ).resolves.toMatchObject({ mode: "live", config: { apiBaseUrl: "https://api.example.test" } });
   });
 });

@@ -169,7 +169,7 @@ export async function switchFulfillmentMode(
     ) {
       modeAttempts.delete(scope);
       if (snapshot) {
-        await sessionStore.set({
+        if (runtime.mode === "fixture") await sessionStore.set({
           merchantSlug,
           locationId,
           cartId: snapshot.id,
@@ -185,7 +185,7 @@ export async function switchFulfillmentMode(
     orderingSession = actions.orderingSession;
     cartActions = actions.cart;
     persistFixtureCart = async (cart) => {
-      await sessionStore.set({
+      if (runtime.mode === "fixture") await sessionStore.set({
         merchantSlug,
         locationId,
         cartId: cart.id,
@@ -221,7 +221,7 @@ export async function switchFulfillmentMode(
         locationId,
         cartId: attempt.existingCart.cartId,
       });
-      await sessionStore.set({
+      if (runtime.mode === "fixture") await sessionStore.set({
         merchantSlug,
         locationId,
         cartId: refreshed.id,
@@ -268,7 +268,7 @@ export async function switchFulfillmentMode(
         locationId,
         cartId: attempt.existingCart.cartId,
       });
-      await sessionStore.set({
+      if (runtime.mode === "fixture") await sessionStore.set({
         merchantSlug,
         locationId,
         cartId: refreshed.id,

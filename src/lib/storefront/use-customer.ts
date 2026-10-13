@@ -54,8 +54,8 @@ let browserTransportPromise: Promise<StorefrontCustomerTransport> | null = null;
 
 async function getBrowserCustomerTransport(): Promise<StorefrontCustomerTransport> {
   browserTransportPromise ??= import("./browser-client").then(
-    ({ storefrontClient }) =>
-      createStorefrontCustomerTransport(storefrontClient),
+    ({ createBrowserStorefrontClient }) =>
+      createStorefrontCustomerTransport(createBrowserStorefrontClient()),
   );
   return browserTransportPromise;
 }

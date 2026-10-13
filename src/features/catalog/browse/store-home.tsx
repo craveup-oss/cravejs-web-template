@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { fulfillmentRoutes } from "@/features/fulfillment/routes";
 import type { ReactNode } from "react";
 
 import { OrderRail } from "@/components/shell/order-rail";
@@ -23,6 +25,7 @@ export interface StoreHomeProps {
   variant: StoreHomeVariant;
   searchSlot?: ReactNode;
   entryContextSlot?: ReactNode;
+  fulfillmentSlot?: ReactNode;
   fulfillmentMode?: FulfillmentMode;
   visualPreset?: StorefrontPreset;
 }
@@ -294,9 +297,7 @@ function StorefrontPresetHero({
           alt=""
           fill
           preload
-          sizes={visualPreset.homeCompositionId === "editorial-product"
-            ? "(min-width: 1280px) 692px, (min-width: 1024px) 54vw, (min-width: 600px) 600px, 100vw"
-            : "(min-width: 1024px) 100vw, (min-width: 600px) 600px, 100vw"}
+          sizes="100vw"
         />
       </div>
       <div className="storefront-preset-hero-copy">
@@ -327,7 +328,10 @@ function StorefrontPresetHero({
             ))}
           </dl>
         ) : null}
-        <ButtonLink href="#menu">Browse menu</ButtonLink>
+        <div className="bakery-hero-actions">
+          <ButtonLink href="#menu">{visualPreset.id === "bakery-editorial" ? "Start order" : "Browse menu"}</ButtonLink>
+          {visualPreset.id === "bakery-editorial" ? <a className="bakery-secondary-action" href="#menu">View menu</a> : null}
+        </div>
       </div>
     </section>
   );
@@ -380,15 +384,17 @@ export function StoreHome({
   variant,
   searchSlot,
   entryContextSlot,
+  fulfillmentSlot,
   fulfillmentMode,
   visualPreset,
 }: StoreHomeProps) {
   const isHome = variant === "home";
+  const isBakery = isHome && visualPreset?.id === "bakery-editorial";
   const supportsOrdering = variant !== "menu-categories";
   const navigationItems = [
     { id: "menu", label: "Menu", href: "#menu" },
     ...(isHome
-      ? [{ id: "store-details", label: "Store details", href: "#store-details" }]
+      ? [{ id: "store-details", label: isBakery ? "Locations" : "Store details", href: isBakery ? "/stores" : "#store-details" }]
       : []),
   ];
   const rail = supportsOrdering && data.orderRail ? <OrderRail order={data.orderRail} /> : undefined;
@@ -406,11 +412,16 @@ export function StoreHome({
           ) : null}
           <StorefrontHeader
             brand={data.location.name}
-            brandHref={isHome ? "#store-details" : "#menu"}
+            brandHref={isBakery ? `/${encodeURIComponent(data.location.id)}` : isHome ? "#store-details" : "#menu"}
             items={navigationItems}
             addressLabel={data.location.addressLabel}
             cartLabel={cartLabel}
+            cartHref={`/${encodeURIComponent(data.location.id)}/cart`}
           />
+          {isBakery ? fulfillmentSlot ?? <div className="bakery-fulfillment-bar">
+            <span>Choose pickup or delivery</span>
+            <Link href={fulfillmentRoutes.mode(data.location.id)}>Select option <span aria-hidden="true">→</span></Link>
+          </div> : null}
           {isHome ? entryContextSlot : null}
           {variant === "menu-categories" && data.location.sessionContextLabel ? (
             <div className="service-session-bar">
@@ -437,7 +448,7 @@ export function StoreHome({
         ) : undefined
       }
       leading={
-        variant === "menu-categories" ? undefined : (
+        variant === "menu-categories" || isBakery ? undefined : (
           <CategoryNavigation
             categories={data.categories}
             includeFeatured
@@ -463,7 +474,10 @@ export function StoreHome({
         {supportsOrdering ? searchSlot : null}
         <div className="store-home-browse-content">
           {data.categories.length || data.menuCategories.length ? (
-            <BrowseContent data={data} variant={variant} />
+            isBakery ? <>
+              <CategoryChips categories={data.categories} includeFeatured={false} />
+              <CategorySections categories={data.categories} />
+            </> : <BrowseContent data={data} variant={variant} />
           ) : (
             <CatalogPageState kind="empty" />
           )}

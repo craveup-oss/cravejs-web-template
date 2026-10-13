@@ -1,3 +1,5 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { StorefrontStoreDirectoryError } from "@/lib/storefront/store-directory";
 import { standaloneEnvironment } from "@/fixtures/standalone-environment";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -58,3 +60,28 @@ it("encodes a contract-valid opaque location as one route segment", async () => 
 });
 
 it("menu entry uses the merchant-verified home route", () => { expect(Menu).toBe(Home); });
+
+it("renders a recoverable timeout without redirecting to an unverified location", async () => {
+  for (const [key, value] of Object.entries(standaloneEnvironment)) vi.stubEnv(key, value);
+  getMerchant.mockRejectedValueOnce(new StorefrontStoreDirectoryError({
+    state: "network-error", code: "REQUEST_TIMEOUT", message: "Request timed out",
+  }));
+  const page = await Home();
+  const html = renderToStaticMarkup(page);
+  expect(html).toContain("The menu is taking longer than expected");
+  expect(html).toContain('action="/"');
+  expect(html).toContain('method="get"');
+  expect(html).toContain("Try again");
+  expect(getMerchant).toHaveBeenCalledTimes(1);
+  expect(redirectSpy).not.toHaveBeenCalled();
+
+  getMerchant.mockResolvedValueOnce({ locations: [{ id: standaloneEnvironment.NEXT_PUBLIC_CRAVEUP_LOCATION_ID }] });
+  await Home();
+  expect(redirectSpy).toHaveBeenCalledWith(`/${standaloneEnvironment.NEXT_PUBLIC_CRAVEUP_LOCATION_ID}`);
+});
+
+it("does not disguise unexpected application errors as a timeout", async () => {
+  for (const [key, value] of Object.entries(standaloneEnvironment)) vi.stubEnv(key, value);
+  getMerchant.mockRejectedValueOnce(new Error("unexpected bug"));
+  await expect(Home()).rejects.toThrow("unexpected bug");
+});

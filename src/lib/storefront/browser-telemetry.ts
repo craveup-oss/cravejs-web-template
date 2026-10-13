@@ -2,7 +2,7 @@
 
 import type { ResolvedStorefrontConfig } from "@/config/storefront-config";
 
-import { storefrontClient } from "./browser-client";
+import { createBrowserStorefrontClient } from "./browser-client";
 import { setActiveStorefrontMerchant } from "./session-store";
 import {
   createStorefrontTelemetryActions,
@@ -19,7 +19,7 @@ export function createBrowserStorefrontTelemetryActions(
   policy: StorefrontTelemetryPolicy,
 ) {
   return createStorefrontTelemetryActions(
-    storefrontClient,
+    createBrowserStorefrontClient(),
     config,
     policy,
     { setMerchantScope: setActiveStorefrontMerchant },

@@ -19,6 +19,7 @@ import { useStorefrontCustomer } from "@/lib/storefront/use-customer";
 
 import { getCheckoutIdentityMessages } from "./checkout-identity.messages";
 import styles from "./checkout-identity.module.css";
+import type { CheckoutContact } from "./checkout-preflight";
 
 const defaultResendDelaySeconds = 30;
 const countryCodes = [
@@ -34,7 +35,7 @@ export type CheckoutIdentityCustomer = Pick<
 >;
 
 export interface CheckoutIdentityResult {
-  readonly profile: StorefrontCustomer;
+  readonly profile: CheckoutContact;
   readonly orderName?: string;
 }
 

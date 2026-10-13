@@ -1,0 +1,14 @@
+import {render, screen, cleanup} from '@testing-library/react';
+import {afterEach, beforeEach, expect, it, vi} from 'vitest';
+import {SWRConfig} from 'swr';
+import {FulfillmentStatus} from './fulfillment-status';
+const state=vi.hoisted(()=>({read:vi.fn(),pathname:'/location-a'}));
+vi.mock('./mode-switch-runtime',()=>({readCurrentFulfillmentDetail:state.read}));
+vi.mock('next/navigation',()=>({usePathname:()=>state.pathname}));
+const runtime={mode:'live',merchantSlug:'bakery'} as const;
+const view=()=> <SWRConfig value={{provider:()=>new Map()}}><FulfillmentStatus locationId="location-a" runtime={runtime}/></SWRConfig>;
+beforeEach(()=>{vi.clearAllMocks();state.pathname='/location-a';});afterEach(cleanup);
+it('shows the saved pickup choice without creating a session',async()=>{state.read.mockResolvedValue({mode:'takeout'});render(view());await screen.findByText('Pickup');expect(screen.getByRole('link',{name:/Change/})).toHaveAttribute('href','/location-a/fulfillment');expect(state.read).toHaveBeenCalledWith(runtime,'location-a');});
+it('does not invent a selection when there is no cart',async()=>{state.read.mockResolvedValue(null);render(view());await screen.findByText('Choose pickup or delivery');expect(screen.queryByText('Pickup')).toBeNull();});
+it('hides a stale mode after an unavailable refresh',async()=>{state.read.mockRejectedValue(new Error('unavailable'));render(view());await screen.findByText('Choose pickup or delivery');expect(screen.queryByText('Pickup')).toBeNull();});
+it('refreshes the canonical selection after returning from the mode route',async()=>{state.read.mockResolvedValue({mode:'takeout'});const cache=new Map();const wrapped=()=> <SWRConfig value={{provider:()=>cache}}><FulfillmentStatus locationId="location-a" runtime={runtime}/></SWRConfig>;const r=render(wrapped());await screen.findByText('Pickup');state.read.mockResolvedValue({mode:'delivery'});state.pathname='/location-a/fulfillment';r.rerender(wrapped());await screen.findByText('Delivery');state.pathname='/location-a';r.rerender(wrapped());await screen.findByText('Delivery');});

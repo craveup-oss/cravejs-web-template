@@ -167,6 +167,21 @@ export function createCartPageView(
         label: messages.taxLabel,
         formattedValue: cart.taxTotalFormatted,
       },
+      {
+        id: "tip",
+        label: messages.tipLabel,
+        formattedValue: cart.waiterTipTotalFormatted,
+      },
+      {
+        id: "service-fee",
+        label: messages.serviceFeeLabel,
+        formattedValue: cart.serviceFeeTotalFormatted,
+      },
+      {
+        id: "platform-fee",
+        label: messages.enterpriseFeeLabel,
+        formattedValue: cart.enterpriseFeeTotalFormatted,
+      },
     ],
     formattedTotal: cart.orderTotalWithServiceFeeFormatted,
     checkoutLabel: isTableside

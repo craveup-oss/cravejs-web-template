@@ -45,7 +45,7 @@ export function MenuItemCard({
             fill
             fetchPriority={imageFetchPriority}
             loading={eager ? "eager" : "lazy"}
-            sizes={layout === "grid" ? "(min-width: 1024px) 210px, 46vw" : "96px"}
+            sizes={layout === "grid" ? "(min-width: 1024px) 400px, (min-width: 600px) 46vw, 100vw" : "96px"}
           />
         </div>
       ) : null}
@@ -53,7 +53,7 @@ export function MenuItemCard({
         <h3>{name}</h3>
         {description ? <p>{description}</p> : null}
         <strong>{formattedPrice}</strong>
-        {unavailable ? <span className="availability-label">Unavailable</span> : null}
+        {unavailable ? <span className="availability-label">Unavailable</span> : href ? <span className="menu-item-action">View item <span aria-hidden="true">+</span></span> : null}
       </div>
     </article>
   );

@@ -2,7 +2,7 @@
 
 import type { ResolvedStorefrontConfig } from "@/config/storefront-config";
 import { clearCustomerToken } from "@/lib/storefront/customer-session";
-import { storefrontClient } from "@/lib/storefront/browser-client";
+import { createBrowserStorefrontClient } from "@/lib/storefront/browser-client";
 import { setActiveStorefrontMerchant } from "@/lib/storefront/session-store";
 
 import { createStorefrontLoyaltyActions } from "./loyalty-actions";
@@ -16,7 +16,7 @@ export function createBrowserStorefrontLoyaltyActions(
   config: StorefrontLoyaltyRuntimeConfig,
 ) {
   return createStorefrontLoyaltyActions(
-    storefrontClient,
+    createBrowserStorefrontClient(),
     {
       tenantId: config.tenantId,
       merchantSlug: config.merchantSlug,

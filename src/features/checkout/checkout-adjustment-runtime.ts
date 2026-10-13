@@ -122,7 +122,7 @@ async function requireCurrentSession(
       snapshot.revision !== cart.revision
     ) {
       if (snapshot) {
-        await sessionModule.browserCartSessionStore.set({
+        if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
           merchantSlug: scope,
           locationId: snapshot.locationId,
           cartId: snapshot.id,
@@ -145,7 +145,7 @@ async function requireCurrentSession(
     scope,
     cart: authoritativeCart,
     persist: async (returnedCart: StorefrontCart) => {
-      await sessionModule.browserCartSessionStore.set({
+      if (runtime.mode === "fixture") await sessionModule.browserCartSessionStore.set({
         merchantSlug: scope,
         locationId: returnedCart.locationId,
         cartId: returnedCart.id,
@@ -200,15 +200,15 @@ export async function mutateCheckoutAdjustment(input: Readonly<{
       { initialCart: session.cart },
     ).cart;
   } else {
-    const [{ storefrontClient }, actionModule, cartModule] = await Promise.all([
+    const [{ createBrowserStorefrontClient }, actionModule, cartModule] = await Promise.all([
       import("@/lib/storefront/browser-client"),
       import("@/lib/storefront/checkout-adjustment-actions"),
       import("@/lib/storefront/cart-actions"),
     ]);
     actions = actionModule.createStorefrontCheckoutAdjustmentActions(
-      storefrontClient,
+      createBrowserStorefrontClient(),
     );
-    cartActions = cartModule.createStorefrontCartActions(storefrontClient);
+    cartActions = cartModule.createStorefrontCartActions(createBrowserStorefrontClient());
   }
   if (attempt.recoveryMode === "reconcile") {
     let refreshed: StorefrontCart;

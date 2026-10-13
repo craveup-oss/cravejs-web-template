@@ -26,11 +26,11 @@ async function loadDistancePort(
     return createStoreDirectoryDistancePort(directory.locations.distance);
   }
 
-  const { browserStoreDirectory } = await import(
+  const { getBrowserStoreDirectory } = await import(
     "@/lib/storefront/browser-store-directory"
   );
   return createStoreDirectoryDistancePort(
-    browserStoreDirectory.locations.distance,
+    getBrowserStoreDirectory().locations.distance,
   );
 }
 

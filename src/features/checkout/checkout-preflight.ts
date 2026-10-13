@@ -53,8 +53,10 @@ function baseBlockForCart(
   return null;
 }
 
+export type CheckoutContact = Pick<StorefrontCustomer, "customerName" | "lastName" | "phoneNumber" | "customerEmail">;
+
 function customerPayload(
-  customer: StorefrontCustomer,
+  customer: CheckoutContact,
   orderName?: string,
 ): ValidateAndUpdateCustomerPayload | null {
   const customerName =
@@ -75,7 +77,7 @@ export async function runCheckoutPreflight<Reason extends string>(
   input: Readonly<{
     locationId: string;
     cartId: string;
-    customer: StorefrontCustomer;
+    customer: CheckoutContact;
     orderName?: string;
     idempotencyKey: string;
     expectedRevision?: number;

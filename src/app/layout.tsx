@@ -5,6 +5,8 @@ import { FixtureModeBanner } from "@/fixtures/fixture-mode-banner";
 import { readRequestStorefrontRuntime } from "@/lib/tenant/server-storefront-runtime";
 import { loadStorefrontMerchantDirectory } from "@/lib/tenant/server-storefront-seo";
 
+import { StorefrontApiOriginProvider } from "@/lib/storefront/public-api-origin";
+
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -38,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children, overlay }: { children: React.ReactNode; overlay: React.ReactNode }) {
   const runtime = await readRequestStorefrontRuntime();
   const locale = getStorefrontLocalePresentation(
     runtime?.config.locale ?? "en",
@@ -49,6 +51,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang={locale.lang}
       dir={locale.direction}
       data-theme={runtime?.config.themeId ?? "base"}
+      data-crave-api-origin={runtime?.mode === "live" ? runtime.config.apiBaseUrl : undefined}
       className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">
@@ -58,7 +61,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         {runtime?.mode === "live" && runtime.config.apiBaseUrl === "https://sandbox-api.craveup.com" ? (
           <aside className="sandbox-demo-banner" role="status">Demo bakery · Test orders only · No real pickup or delivery</aside>
         ) : null}
-        {children}
+        <StorefrontApiOriginProvider origin={runtime?.mode === "live" ? runtime.config.apiBaseUrl : null}>
+          {children}
+          {overlay}
+        </StorefrontApiOriginProvider>
       </body>
     </html>
   );

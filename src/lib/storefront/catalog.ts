@@ -1,4 +1,5 @@
 import type {
+  RequestConfig,
   MenuBundle,
   MenuProduct,
   Modifier,
@@ -140,7 +141,7 @@ interface StorefrontCatalogClient {
     ): Promise<MenuBundle>;
   };
   readonly products: {
-    get(locationId: string, productId: string): Promise<Product>;
+    get(locationId: string, productId: string, config?: RequestConfig): Promise<Product>;
   };
 }
 
@@ -338,7 +339,7 @@ export function createStorefrontCatalogReader(
     products: {
       get: (locationId, productId) =>
         readNullable(
-          () => client.products.get(locationId, productId),
+          () => client.products.get(locationId, productId, { query: { menuOnly: true } }),
           mapStorefrontProduct,
         ),
     },

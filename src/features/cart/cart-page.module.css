@@ -1,4 +1,5 @@
 .page {
+  container: cart / inline-size;
   display: flex;
   min-height: calc(100dvh - var(--shell-mobile-nav-height));
   flex: 1;
@@ -84,7 +85,7 @@
 .body {
   display: flex;
   flex: 1;
-  padding-bottom: calc(var(--shell-mobile-cta-height) + var(--layout-safe-bottom));
+  padding-bottom: 0;
 }
 
 .content {
@@ -162,8 +163,8 @@
 
 .lineHeading strong {
   flex: 0 0 auto;
-  grid-column: 1;
-  grid-row: 4;
+  grid-column: 2;
+  grid-row: 1;
   font-family: var(--font-accent), sans-serif;
   font-weight: var(--font-accent-style);
 }
@@ -199,10 +200,10 @@
 
 .lineActions {
   display: flex;
-  grid-column: 2;
-  grid-row: 1 / span 5;
+  grid-column: 1 / -1;
+  grid-row: 6;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--space-3);
   padding-top: var(--space-1);
 }
@@ -389,14 +390,9 @@
 }
 
 .checkoutAction {
-  position: fixed;
-  z-index: 3;
-  inset-inline: 0;
-  bottom: 0;
-  min-height: var(--shell-mobile-cta-height);
-  padding: var(--space-3) var(--space-5) calc(var(--space-4) + env(safe-area-inset-bottom));
-  border-top: var(--stroke-hairline) solid var(--color-border-subtle);
-  background: var(--color-surface-raised);
+  position: static;
+  min-width: 0;
+
 }
 
 .checkoutAction :global(.primary-button) {
@@ -584,7 +580,7 @@
   display: block;
 }
 
-@media (min-width: 1024px) {
+@container cart (min-width: 1024px) {
   .mutationNotice {
     inset-inline-end: var(--space-8);
     bottom: var(--space-8);
@@ -813,3 +809,11 @@
   }
 
 }
+
+:global(.storefront-dialog[data-kind="cart"]) .page {
+  min-height: 0;
+  padding-top: 48px;
+}
+
+.clearButton { flex-shrink: 0; }
+.lineHeading h2, .cartIntro p { overflow-wrap: anywhere; }

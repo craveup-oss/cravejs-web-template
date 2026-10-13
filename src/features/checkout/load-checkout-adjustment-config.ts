@@ -14,13 +14,13 @@ export async function loadCheckoutAdjustmentConfig(
     const { fixtureGratuityConfig } = await import("@/fixtures/gratuity");
     return { state: "available", config: fixtureGratuityConfig };
   }
-  const { storefrontServerClient } = await import(
+  const { getStorefrontServerClient } = await import(
     "@/lib/storefront/server-client"
   );
   try {
     return {
       state: "available",
-      config: await storefrontServerClient.locations.getGratuity(locationId),
+      config: await (await getStorefrontServerClient()).locations.getGratuity(locationId),
     };
   } catch {
     return { state: "unavailable" };
