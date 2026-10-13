@@ -7,3 +7,5 @@
     visibility: hidden;
   }
 }
+
+:global(html[data-storefront-preset="bakery-editorial"]) .shell :global(.storefront-header-inner) { visibility: visible; }

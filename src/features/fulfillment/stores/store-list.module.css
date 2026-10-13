@@ -370,3 +370,14 @@
     border: 0;
   }
 }
+
+:global(html[data-storefront-preset="bakery-editorial"]) .surface { padding: 36px 24px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .intro h1 { font-family: var(--font-display), serif; font-size: 46px; font-weight: 400; }
+:global(html[data-storefront-preset="bakery-editorial"]) .intro p { display: block; }
+:global(html[data-storefront-preset="bakery-editorial"]) .card { border-radius: 3px; background: transparent; }
+:global(html[data-storefront-preset="bakery-editorial"]) .primaryAction { position: static; padding: 0; border: 0; margin-top: 24px; background: transparent; }
+@media (min-width: 1024px) {
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 48px; width: min(100%, 1200px); padding: 56px 40px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface > * { grid-column: 1; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .mapPlaceholder { grid-column: 2; grid-row: 1 / 7; min-height: 460px; margin: 0; }
+}

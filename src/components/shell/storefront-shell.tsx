@@ -7,6 +7,7 @@ import { StorefrontSkipLink } from "./storefront-skip-link";
 export interface StorefrontShellProps {
   header: ReactNode;
   hero?: ReactNode;
+  footer?: ReactNode;
   intro?: ReactNode;
   leading?: ReactNode;
   children: ReactNode;
@@ -19,6 +20,7 @@ export interface StorefrontShellProps {
 export function StorefrontShell({
   header,
   hero,
+  footer,
   intro,
   leading,
   children,
@@ -49,6 +51,7 @@ export function StorefrontShell({
           {rail ? <div className="storefront-rail">{rail}</div> : null}
         </div>
       </main>
+      {footer}
       {stickyAction ? <div className="storefront-sticky-action">{stickyAction}</div> : null}
     </div>
   );

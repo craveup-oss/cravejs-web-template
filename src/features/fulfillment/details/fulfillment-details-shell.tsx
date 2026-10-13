@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { StorefrontFooter } from "@/components/shell/storefront-footer";
+
 import { StorefrontHeader } from "@/components/shell/storefront-header";
 import { StorefrontSkipLink } from "@/components/shell/storefront-skip-link";
 
@@ -28,6 +30,7 @@ export function FulfillmentDetailsShell({
       <div id="storefront-main" tabIndex={-1}>
         {children}
       </div>
+      <StorefrontFooter brand={brand} menuHref={href} />
     </div>
   );
 }

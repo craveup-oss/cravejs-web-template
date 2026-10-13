@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { StorefrontFooter } from "@/components/shell/storefront-footer";
 import { notFound } from "next/navigation";
 
 import { StorefrontHeader } from "@/components/shell/storefront-header";
@@ -117,6 +118,7 @@ export default async function StoresPage() {
           }
         />
       </div>
+      {firstLocationId ? <StorefrontFooter brand={data.merchantName} menuHref={`/${encodeURIComponent(firstLocationId)}`} /> : null}
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import type { LinkProps } from "next/link";
 import type { CSSProperties } from "react";
 
+import { StorefrontFooter } from "@/components/shell/storefront-footer";
+
 import { StorefrontHeader } from "@/components/shell/storefront-header";
 import { StorefrontSkipLink } from "@/components/shell/storefront-skip-link";
 import { Button, ButtonLink } from "@/components/ui/button";
@@ -174,6 +176,7 @@ export function CartPage({
         <StorefrontSkipLink />
         <CartStorefrontHeader browseHref={browseHref} cart={cart} />
         <CartEmpty browseHref={browseHref} copy={cart.emptyState} />
+        <StorefrontFooter brand={cart.locationLabel} menuHref={browseHref} />
       </>
     );
   }
@@ -254,6 +257,7 @@ export function CartPage({
           </div>
         </div>
       </main>
+      <StorefrontFooter brand={cart.locationLabel} menuHref={browseHref} />
     </>
   );
 }

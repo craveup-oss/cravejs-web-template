@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { CheckoutIdentityRoute, type CheckoutIdentityRouteProps } from "./checkout-identity-route";
+vi.mock("./checkout-cart-summary", () => ({CheckoutCartSummary: () => null}));
 vi.mock("./checkout-identity", () => ({CheckoutIdentity: () => <p>Customer sign in</p>}));
 vi.mock("./pickup-checkout-preflight", () => ({PickupCheckoutPreflight: ({identity}: {identity: unknown}) => <output data-testid="contact">{JSON.stringify(identity)}</output>}));
 vi.mock("./tableside-checkout-preflight", () => ({TablesideCheckoutPreflight: () => null}));
@@ -8,10 +9,11 @@ const props = {merchantSlug:"bakery",locationId:"location-one",locale:"en-US",mo
 describe("guest checkout contact", () => {
  it("passes contact to canonical preflight without creating a customer identity", () => {
   render(<CheckoutIdentityRoute {...props}/>);
-  fireEvent.change(screen.getByLabelText("Name"),{target:{value:"Sandbox Guest"}});
+  fireEvent.change(screen.getByLabelText("First name"),{target:{value:"Sandbox"}});
+  fireEvent.change(screen.getByLabelText("Last name"),{target:{value:"Guest"}});
   fireEvent.change(screen.getByLabelText("Email"),{target:{value:"sandbox@example.com"}});
   fireEvent.click(screen.getByRole("button",{name:"Continue as guest"}));
-  expect(JSON.parse(screen.getByTestId("contact").textContent!)).toEqual({profile:{customerName:"Sandbox Guest",customerEmail:"sandbox@example.com",lastName:"",phoneNumber:null}});
+  expect(JSON.parse(screen.getByTestId("contact").textContent!)).toEqual({profile:{customerName:"Sandbox",customerEmail:"sandbox@example.com",lastName:"Guest",phoneNumber:null}});
   expect(screen.queryByText("Customer sign in")).not.toBeInTheDocument();
  });
  it("retains explicit customer sign in", () => {
@@ -21,11 +23,12 @@ describe("guest checkout contact", () => {
  });
  it("does not carry guest contact into a different installation", () => {
   const view=render(<CheckoutIdentityRoute {...props}/>);
-  fireEvent.change(screen.getByLabelText("Name"),{target:{value:"Sandbox Guest"}});
+  fireEvent.change(screen.getByLabelText("First name"),{target:{value:"Sandbox"}});
+  fireEvent.change(screen.getByLabelText("Last name"),{target:{value:"Guest"}});
   fireEvent.change(screen.getByLabelText("Email"),{target:{value:"sandbox@example.com"}});
   fireEvent.click(screen.getByRole("button",{name:"Continue as guest"}));
   view.rerender(<CheckoutIdentityRoute {...props} merchantSlug="other" locationId="location-two"/>);
-  expect(screen.getByLabelText("Name")).toHaveValue("");
+  expect(screen.getByLabelText("First name")).toHaveValue("");
   expect(screen.queryByTestId("contact")).not.toBeInTheDocument();
  });
 });

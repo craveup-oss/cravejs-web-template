@@ -817,3 +817,26 @@
 
 .clearButton { flex-shrink: 0; }
 .lineHeading h2, .cartIntro p { overflow-wrap: anywhere; }
+
+/* Figma 2331:173: spacious item list and inset order summary. */
+:global(html[data-storefront-preset="bakery-editorial"]) .content { max-width: 1200px; padding-block: 42px; gap: 48px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .cartIntro h1 { font-size: 54px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .summaryColumn { padding: 24px; background: #f1ece3; border: 1px solid #e7ded2; border-radius: 3px; margin-top: 100px; gap: 18px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .line { grid-template-columns: 150px minmax(0, 1fr); align-items: start; padding-block: 20px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .lineImage { width: 150px; height: 135px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .lineContent { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .lineHeading h2 { font-size: 25px; font-weight: 400; }
+:global(html[data-storefront-preset="bakery-editorial"]) .lineHeading strong { grid-column: 2; grid-row: 1; }
+:global(html[data-storefront-preset="bakery-editorial"]) .lineActions { grid-column: 1 / -1; grid-row: 6; justify-content: flex-start; gap: 24px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .orderSummary { padding: 0; background: transparent; border: 0; }
+:global(html[data-storefront-preset="bakery-editorial"]) .orderSummary h2 { font-size: 27px; font-weight: 400; }
+:global(html[data-storefront-preset="bakery-editorial"]) .checkoutAction :global(.primary-button) { border-radius: 3px; }
+@media (max-width: 700px) {
+  :global(html[data-storefront-preset="bakery-editorial"]) .content { padding: 28px 24px; gap: 24px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .cartIntro h1 { font-size: 38px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .line { grid-template-columns: 80px minmax(0, 1fr); gap: 12px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .lineImage { width: 80px; height: 90px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .lineHeading h2 { font-size: 22px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .lineActions { gap: 12px; flex-wrap: wrap; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .summaryColumn { margin-top: 0; padding: 20px; }
+}

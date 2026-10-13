@@ -149,3 +149,12 @@
     border: 0;
   }
 }
+
+:global(html[data-storefront-preset="bakery-editorial"]) .surface { padding: 40px 24px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .mode { background: transparent; border-radius: 3px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .action { position: static; padding: 0; margin-top: 24px; border: 0; background: transparent; }
+@media (min-width: 1024px) {
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface { position: relative; width: min(100%, 1200px); min-height: 560px; padding: 56px 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 64px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface > * { grid-column: 1; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface::after { content: ""; position: absolute; top: 32px; bottom: 32px; left: 53%; right: 32px; background: url("/assets/template/bakery-editorial-hero.webp") center / cover; }
+}

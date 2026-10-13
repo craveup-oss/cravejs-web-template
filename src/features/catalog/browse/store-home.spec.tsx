@@ -109,6 +109,15 @@ describe("StoreHome", () => {
     expect(screen.getAllByText("Your Restaurant").length).toBeGreaterThan(0);
   });
 
+  it("upgrades bakery presentation without replacing merchant catalog", async () => {
+    const data = await loadStoreHomeData("demo", fixtureCatalogSource);
+    render(<StoreHome data={data} variant="home" visualPreset={resolveStorefrontPreset("bakery-editorial")} />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Real ingredients.Brighter days.");
+    expect(screen.getAllByRole("link", { name: "Our bakery" }).every(link => link.getAttribute("href") === "/demo/about")).toBe(true);
+    expect(screen.getAllByText(/Your Restaurant/).length).toBeGreaterThan(0);
+    expect(screen.queryByText("Leclerc Bakery")).not.toBeInTheDocument();
+  });
+
   it("composes entry context and suppresses pickup metrics for table service", async () => {
     const data = await loadStoreHomeData("demo", fixtureCatalogSource);
     render(

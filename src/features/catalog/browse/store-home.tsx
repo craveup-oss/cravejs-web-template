@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { StorefrontFooter } from "@/components/shell/storefront-footer";
 import Link from "next/link";
 import { fulfillmentRoutes } from "@/features/fulfillment/routes";
 import type { ReactNode } from "react";
@@ -6,7 +7,7 @@ import type { ReactNode } from "react";
 import { OrderRail } from "@/components/shell/order-rail";
 import { StorefrontHeader } from "@/components/shell/storefront-header";
 import { StorefrontShell } from "@/components/shell/storefront-shell";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { MenuItemCard } from "@/components/ui/menu-item-card";
 import type { StorefrontPreset } from "@/presets/storefront-presets";
 
@@ -304,12 +305,12 @@ function StorefrontPresetHero({
         <div>
           {visualPreset.id === "bakery-editorial" ? (
             <>
-              <p className="bakery-eyebrow">{data.location.name} · NEIGHBORHOOD BAKERY</p>
-              <h1>A little butter.<br />A better morning.</h1>
-              <p className="bakery-description">Slow-fermented dough. Golden, shattering layers. Your daily ritual, fresh from our oven.</p>
+              <p className="bakery-eyebrow"><span className="bakery-home-copy">THE NEIGHBORHOOD BAKERY</span><span className="bakery-search-copy">OUR MENU</span></p>
+              <h1><span className="bakery-home-copy">A little butter.<br /><em>A better morning.</em></span><span className="bakery-search-copy">Real ingredients.<br />Brighter days.</span></h1>
+              <p className="bakery-description"><span className="bakery-home-copy">Slow-fermented dough. Golden, shattering layers.<br />Your daily ritual, fresh from our oven.</span><span className="bakery-search-copy">Seasonal pastries, rustic breads and a thoughtful selection of coffee. Made fresh, always.</span></p>
             </>
           ) : <h1>{data.location.name}</h1>}
-          {data.location.statusLabel || data.location.addressLabel ? (
+          {visualPreset.id !== "bakery-editorial" && (data.location.statusLabel || data.location.addressLabel) ? (
             <p>
               {data.location.statusLabel ? data.location.statusLabel : null}
               {data.location.statusLabel && data.location.addressLabel ? " · " : null}
@@ -328,10 +329,7 @@ function StorefrontPresetHero({
             ))}
           </dl>
         ) : null}
-        <div className="bakery-hero-actions">
-          <ButtonLink href="#menu">{visualPreset.id === "bakery-editorial" ? "Start order" : "Browse menu"}</ButtonLink>
-          {visualPreset.id === "bakery-editorial" ? <a className="bakery-secondary-action" href="#menu">View menu</a> : null}
-        </div>
+        {visualPreset.id === "bakery-editorial" ? <div className="bakery-hero-actions bakery-home-copy"><ButtonLink href={fulfillmentRoutes.mode(data.location.id)}>Start order →</ButtonLink><a className="bakery-secondary-action" href="#menu">Explore the menu</a></div> : <ButtonLink href="#menu">Browse menu</ButtonLink>}
       </div>
     </section>
   );
@@ -394,11 +392,12 @@ export function StoreHome({
   const navigationItems = [
     { id: "menu", label: "Menu", href: "#menu" },
     ...(isHome
-      ? [{ id: "store-details", label: isBakery ? "Locations" : "Store details", href: isBakery ? "/stores" : "#store-details" }]
+      ? [{ id: "store-details", label: isBakery ? "Our bakery" : "Store details", href: isBakery ? `/${encodeURIComponent(data.location.id)}/about` : "#store-details" }]
       : []),
   ];
-  const rail = supportsOrdering && data.orderRail ? <OrderRail order={data.orderRail} /> : undefined;
-  const cartLabel = data.orderRail
+  if (isBakery) navigationItems.push({ id: "visit", label: "Visit", href: "/stores" });
+  const rail = !isBakery && supportsOrdering && data.orderRail ? <OrderRail order={data.orderRail} /> : undefined;
+  const cartLabel = isBakery ? `Bag${data.orderRail ? ` (${data.orderRail.itemCountLabel})` : ""}` : data.orderRail
     ? `Cart · ${data.orderRail.itemCountLabel} · ${data.orderRail.totalLabel}`
     : "Cart";
   const showContextHeader = variant === "menu-categories" || variant === "full-menu";
@@ -433,6 +432,7 @@ export function StoreHome({
           ) : null}
         </>
       }
+      footer={isBakery ? <><section className="bakery-story bakery-home-copy" aria-labelledby="bakery-story-title"><div className="bakery-story-photo"><Image src={visualPreset.heroImageSrc} alt="Freshly baked pastries and rustic bread" fill sizes="(min-width: 700px) 50vw, 100vw" /></div><div className="bakery-story-copy"><p className="bakery-eyebrow">OUR DAILY RITUAL</p><h2 id="bakery-story-title">Good things<br />take their time.</h2><p>A little patience. A lot of care.<br />Made for your everyday.</p><Link href={`/${encodeURIComponent(data.location.id)}/about`}>Meet the bakery <span aria-hidden="true">→</span></Link></div></section><StorefrontFooter brand={data.location.name} menuHref={`/${encodeURIComponent(data.location.id)}`} /></> : undefined}
       hero={
         isHome ? (
           visualPreset ? (
@@ -448,19 +448,19 @@ export function StoreHome({
         ) : undefined
       }
       leading={
-        variant === "menu-categories" || isBakery ? undefined : (
+        variant === "menu-categories" ? undefined : (
           <CategoryNavigation
             categories={data.categories}
-            includeFeatured
+            includeFeatured={!isBakery}
           />
         )
       }
       rail={rail}
       stickyAction={
         supportsOrdering && data.orderRail ? (
-          <Button disabled>
-            Cart · {data.orderRail.itemCountLabel} · {data.orderRail.totalLabel}
-          </Button>
+          <ButtonLink href={`/${encodeURIComponent(data.location.id)}/cart`}>
+            {isBakery ? "View bag" : "Cart"} · {data.orderRail.itemCountLabel} · {data.orderRail.totalLabel}
+          </ButtonLink>
         ) : undefined
       }
       variant={variant}
@@ -471,7 +471,7 @@ export function StoreHome({
           <h1 className="sr-only">{data.location.name}</h1>
         ) : null}
         {variant === "full-menu" ? <MenuTypeTabs /> : null}
-        {supportsOrdering ? searchSlot : null}
+        {isBakery ? <><div className="bakery-menu-kicker bakery-home-copy"><span>PASTRIES, BREAD &amp; EVERYDAY RITUALS</span><span aria-hidden="true" /><span>CRAVE.JS / BAKERY EDITORIAL</span></div><div className="bakery-menu-heading"><h2 className="bakery-home-copy">Fresh from the oven</h2>{searchSlot}</div></> : supportsOrdering ? searchSlot : null}
         <div className="store-home-browse-content">
           {data.categories.length || data.menuCategories.length ? (
             isBakery ? <>

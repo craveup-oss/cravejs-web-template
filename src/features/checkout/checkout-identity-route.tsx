@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckoutCartSummary } from "./checkout-cart-summary";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import styles from "./checkout-identity.module.css";
@@ -86,25 +87,26 @@ function ScopedCheckoutIdentityRoute(props: CheckoutIdentityRouteProps) {
     );
   }
   if (!signIn) return (
-    <section className={styles.surface} aria-label="Checkout details">
-      <div className={styles.content}>
+    <section className={`${styles.surface} checkout-contact-layout`} aria-label="Checkout details">
+      <div className={`${styles.content} checkout-contact-content`}>
         <Link href={props.backHref}>Back to cart</Link>
         <h1 className={styles.heading}>Your details</h1>
-        <p className={styles.description}>Continue as a guest. No account needed.</p>
+        <p className={styles.description}>We’ll use this information to keep you updated about your order.</p>
         <form onSubmit={(event) => {
           event.preventDefault();
           const data = new FormData(event.currentTarget);
-          const customerName = String(data.get("name") ?? "").trim();
+          const customerName = String(data.get("firstName") ?? "").trim();
           const customerEmail = String(data.get("email") ?? "").trim();
           if (!customerName || !customerEmail) return;
-          setIdentity({profile: {customerName, customerEmail, lastName: "", phoneNumber: null}});
+          setIdentity({profile: {customerName, customerEmail, lastName: String(data.get("lastName") ?? "").trim(), phoneNumber: String(data.get("phone") ?? "").trim() || null}});
         }}>
-          <label className={styles.nameField}>Name<input name="name" autoComplete="name" required maxLength={100} /></label>
+          <div className="checkout-contact-names"><label className={styles.nameField}>First name<input name="firstName" autoComplete="given-name" required maxLength={100} /></label><label className={styles.nameField}>Last name<input name="lastName" autoComplete="family-name" required maxLength={100} /></label></div>
           <label className={styles.nameField}>Email<input name="email" type="email" autoComplete="email" required maxLength={254} /></label>
-          <Button type="submit">Continue as guest</Button>
+          <label className={styles.nameField}>Phone (optional)<input name="phone" type="tel" autoComplete="tel" maxLength={30} /></label><Button type="submit">Continue as guest</Button>
         </form>
         <button className={styles.resend} type="button" onClick={() => setSignIn(true)}>Sign in instead</button>
       </div>
+      <CheckoutCartSummary {...props} />
     </section>
   );
   return (

@@ -259,3 +259,14 @@
     grid-row: 1;
   }
 }
+
+:global(html[data-storefront-preset="bakery-editorial"]) .surface { max-width: 1120px; margin: 0 auto; padding: 48px 32px; gap: 28px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .heading,
+:global(html[data-storefront-preset="bakery-editorial"]) .detailHeading { font-size: 52px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .orderCard,
+:global(html[data-storefront-preset="bakery-editorial"]) .detailCard { background: transparent; padding: 24px; border-radius: 3px; }
+@media (max-width: 700px) {
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface { padding: 28px 24px; }
+  :global(html[data-storefront-preset="bakery-editorial"]) .heading,
+  :global(html[data-storefront-preset="bakery-editorial"]) .detailHeading { font-size: 38px; }
+}

@@ -171,3 +171,11 @@
     padding: var(--space-5);
   }
 }
+
+:global(html[data-storefront-preset="bakery-editorial"]) .surface[data-checkout-state="scheduled"] { width: min(100%, 1200px); }
+:global(html[data-storefront-preset="bakery-editorial"]) .card { background: transparent; border-color: #e7ded2; padding: 20px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .card h2 { font-size: 24px; }
+:global(html[data-storefront-preset="bakery-editorial"]) .summary { background: #f1ece3; padding: 24px; }
+@media (min-width: 1024px) {
+  :global(html[data-storefront-preset="bakery-editorial"]) .surface[data-checkout-state="scheduled"] { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 64px; padding: 48px 40px; }
+}

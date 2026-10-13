@@ -1,12 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import useSWR from "swr";
+import { useActiveCart } from "./use-active-cart";
 import { getCartMessages } from "@/content/cart";
-import { createBrowserStorefrontClient } from "@/lib/storefront/browser-client";
-import { createMerchantCartSessionStore } from "@/lib/storefront/session-store";
-import { getCustomerToken } from "@/lib/storefront/customer-session";
-import { useStorefrontApiOrigin } from "@/lib/storefront/public-api-origin";
 import { CartController } from "./cart-controller";
 import { CartPage } from "./cart-page";
 import { createCartPageView, type CartViewLocation } from "./cart-view";
@@ -19,22 +15,8 @@ export function LiveCartPage({ merchantSlug, locationId, locale, location }: {
   readonly locale: string;
   readonly location: CartViewLocation;
 }) {
-  const apiOrigin = useStorefrontApiOrigin();
   const browseHref = `/${encodeURIComponent(locationId)}`;
-  const resource = useSWR(["live-cart", apiOrigin, merchantSlug, locationId], async () => {
-    const sessionStore = createMerchantCartSessionStore(merchantSlug);
-    const session = await sessionStore.get(locationId);
-    if (!session) return null;
-    const client = createBrowserStorefrontClient({
-      sessionStore,
-      getAuthToken: () => getCustomerToken(merchantSlug),
-    });
-    const cart = await client.cart.get(locationId, session.cartId);
-    if (cart.locationId !== locationId || cart.id !== session.cartId) {
-      throw new Error("Cart scope mismatch");
-    }
-    return cart;
-  }, { revalidateOnFocus: false, shouldRetryOnError: false });
+  const resource = useActiveCart({ merchantSlug, locationId });
 
   if (resource.isLoading) return <main className="catalog-state" role="status">Loading your cart…</main>;
   if (resource.error) return <main className="catalog-state">

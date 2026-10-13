@@ -51,6 +51,7 @@ export default async function RootLayout({ children, overlay }: { children: Reac
       lang={locale.lang}
       dir={locale.direction}
       data-theme={runtime?.config.themeId ?? "base"}
+      data-storefront-preset={runtime?.config.presetId}
       data-crave-api-origin={runtime?.mode === "live" ? runtime.config.apiBaseUrl : undefined}
       className="h-full antialiased"
     >

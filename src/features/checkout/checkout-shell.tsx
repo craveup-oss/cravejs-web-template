@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { StorefrontFooter } from "@/components/shell/storefront-footer";
+
 import { StorefrontHeader } from "@/components/shell/storefront-header";
 import { StorefrontSkipLink } from "@/components/shell/storefront-skip-link";
 
@@ -30,6 +32,7 @@ export function CheckoutShell({
         desktopAction={{ id: "account", label: "Account", href: "/account/sign-in" }}
       />
       <main id="storefront-main" tabIndex={-1}>{children}</main>
+      <StorefrontFooter brand={brand} menuHref={brandHref} />
     </div>
   );
 }
