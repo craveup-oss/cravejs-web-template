@@ -115,6 +115,10 @@ const baseMoney = {
 } as const;
 
 export const fixtureCart = {
+  authorityContext: null,
+  quoteFingerprint: null,
+  quoteExpiresAt: null,
+  catalogRevalidation: null,
   id: "fixture-cart-demo",
   locationId: fixtureLocation.id,
   merchantId: "fixture-merchant",

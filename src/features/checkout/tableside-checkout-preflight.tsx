@@ -135,7 +135,7 @@ export function TablesideCheckoutPreflight({
       <section className={styles.blocked} aria-labelledby="tableside-checkout-blocked">
         <h1 id="tableside-checkout-blocked">{messages.title}</h1>
         <p role="alert">{messages.block(result.reason)}</p>
-        <Link href={backHref}>{messages.reviewCart}</Link>
+        <a href={backHref}>{messages.reviewCart}</a>
       </section>
     );
   }

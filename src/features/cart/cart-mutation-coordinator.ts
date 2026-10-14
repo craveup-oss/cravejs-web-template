@@ -20,7 +20,8 @@ type MutationKind =
   | "add-item"
   | "update-item-quantity"
   | "remove-item"
-  | "clear-cart";
+  | "clear-cart"
+  | "accept-catalog-changes";
 
 export interface CartMutationReconciliationResult {
   readonly state: "reconciled";
@@ -157,6 +158,7 @@ export interface CartMutationCoordinator {
   removeItem(
     intent: RemoveCartItemMutationIntent,
   ): Promise<StorefrontCartItemMutationResult>;
+  acceptCatalogChanges(intent: ClearCartMutationIntent): Promise<StorefrontCartItemMutationResult>;
   clear(intent: ClearCartMutationIntent): Promise<StorefrontDeleteCartResult>;
   retryConflict(intentId: string): Promise<MutationResult>;
   retryLostResponse(intentId: string): Promise<MutationResult>;
@@ -406,6 +408,20 @@ class CartMutationCoordinatorImpl implements CartMutationCoordinator {
     }) as Promise<StorefrontCartItemMutationResult>;
   }
 
+  acceptCatalogChanges(intent: ClearCartMutationIntent): Promise<StorefrontCartItemMutationResult> {
+    assertIntentId(intent.intentId);
+    return this.enqueue({
+      intentId: intent.intentId,
+      fingerprint: JSON.stringify({ kind: "accept-catalog-changes" }),
+      kind: "accept-catalog-changes",
+      execute: (attempt) => this.actions.acceptCatalogChanges({
+        locationId: attempt.cart.locationId, cartId: attempt.cart.id,
+        revision: attempt.cart.revision, idempotencyKey: attempt.idempotencyKey,
+      }),
+      generation: this.generation, retainedForRetry: false,
+    }) as Promise<StorefrontCartItemMutationResult>;
+  }
+
   clear(intent: ClearCartMutationIntent): Promise<StorefrontDeleteCartResult> {
     assertIntentId(intent.intentId);
     return this.enqueue({
@@ -530,6 +546,12 @@ class CartMutationCoordinatorImpl implements CartMutationCoordinator {
       }
     }
 
+    // A rejected acceptance did not commit. The shopper may choose to edit or
+    // remove an item instead; uncertain writes must still be reconciled first.
+    if (this.snapshot.state === "retry-required" && this.snapshot.kind === "accept-catalog-changes") {
+      this.entries.delete(this.snapshot.intentId);
+      this.setSnapshot({ state: "ready", cart: this.cart });
+    }
     if (
       this.snapshot.state === "retry-required" ||
       this.snapshot.state === "retryable-failure"

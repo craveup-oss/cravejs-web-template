@@ -444,6 +444,9 @@ export function createFixtureStorefrontActions(
       },
     },
     cart: {
+      async acceptCatalogChanges() {
+        throw new StorefrontCartActionError({ state: "integration-error", code: "FIXTURE_CATALOG_UNAVAILABLE", message: "Catalog change acceptance requires a live menu." });
+      },
       async get(input) {
         if (
           input.locationId !== fixtureLocation.id ||

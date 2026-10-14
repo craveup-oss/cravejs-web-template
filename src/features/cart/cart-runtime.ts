@@ -70,6 +70,7 @@ async function fixtureActions(
 
   return {
     get: actions.get,
+    acceptCatalogChanges: async (input) => persist(await actions.acceptCatalogChanges(input)),
     addItem: async (input) => persist(await actions.addItem(input)),
     updateItemQuantity: async (input) =>
       persist(await actions.updateItemQuantity(input)),

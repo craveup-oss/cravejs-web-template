@@ -84,8 +84,9 @@ export interface StorefrontCustomerClient {
       ): Promise<{ success: true; addressId: string }>;
     };
     readonly savedPayments: {
-      list(config?: RequestConfig): Promise<SavedPaymentMethod[]>;
+      list(locationId: string, config?: RequestConfig): Promise<SavedPaymentMethod[]>;
       delete(
+        locationId: string,
         paymentId: string,
         config?: RequestConfig,
       ): Promise<{ success: true }>;
@@ -147,9 +148,10 @@ export interface StorefrontCustomerTransport {
     ): Promise<{ success: true; addressId: string }>;
   };
   readonly savedPayments: {
-    list(merchantSlug: string): Promise<SavedPaymentMethod[]>;
+    list(merchantSlug: string, locationId: string): Promise<SavedPaymentMethod[]>;
     delete(
       merchantSlug: string,
+      locationId: string,
       paymentId: string,
     ): Promise<{ success: true }>;
   };
@@ -461,14 +463,15 @@ export function createStorefrontCustomerTransport(
       },
     },
     savedPayments: {
-      list: (merchantSlug) =>
-        authorized(merchantSlug, () =>
-          client.customer.savedPayments.list(),
-        ),
-      async delete(merchantSlug, paymentId) {
+      list: (merchantSlug, locationId) => {
+        requireIdentifierValue(locationId, "INVALID_LOCATION_ID");
+        return authorized(merchantSlug, () => client.customer.savedPayments.list(locationId));
+      },
+      async delete(merchantSlug, locationId, paymentId) {
+        requireIdentifierValue(locationId, "INVALID_LOCATION_ID");
         requireIdentifierValue(paymentId, "INVALID_PAYMENT_ID");
         return await authorized(merchantSlug, () =>
-          client.customer.savedPayments.delete(paymentId),
+          client.customer.savedPayments.delete(locationId, paymentId),
         );
       },
     },

@@ -60,7 +60,7 @@ export interface CartPageView {
 export interface CartPageProps {
   cart: CartPageView;
   browseHref: string;
-  checkoutHref?: LinkProps["href"];
+  checkoutHref?: string;
   pendingItemId?: string;
   pending?: boolean;
   onClear?: () => void | Promise<void>;
@@ -117,14 +117,14 @@ function CheckoutAction({
   label,
   unavailableTitle,
 }: {
-  href?: LinkProps["href"];
+  href?: string;
   label: string;
   unavailableTitle: string;
 }) {
   const content = href ? (
-    <ButtonLink href={href}>
+    <a className="primary-button" href={href}>
       {label}
-    </ButtonLink>
+    </a>
   ) : (
     <Button
       disabled

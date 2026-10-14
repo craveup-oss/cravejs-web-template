@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@craveup/storefront-sdk':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz
+        version: file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz
       '@googlemaps/js-api-loader':
         specifier: ^2.1.1
         version: 2.1.1
@@ -197,8 +197,9 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@craveup/storefront-sdk@2.0.1':
-    resolution: {integrity: sha512-dqvAtGf9+0ZVbG57iDAXNs4HAy+N37u9bmx5+y8KFFsVxOkvrPP5rhrLv7BBKvLosdhooi8YRAQsWCW9xxuJog==}
+  '@craveup/storefront-sdk@file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz':
+    resolution: {integrity: sha512-IEd42lEBPbvE1poI3AII2DuRtnsyH7zx72gUAIm8KF44a8P6IHaPDvdxKcWPJDAMo8uG9yBAHL7up5wQZFRVxQ==, tarball: file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz}
+    version: 2.1.0-catalog.0
     engines: {node: '>=20'}
 
   '@csstools/color-helpers@6.1.0':
@@ -2352,8 +2353,8 @@ packages:
     resolution: {integrity: sha512-MbjN408fEndfiQXbFQ1vnd+1NoLDsnQW41410oQBXiyXDMYH5z505juWa4KUE1LqxRC7DgOgZDbKLxHIwm27hA==}
     engines: {node: '>=0.10'}
 
-  legacy-javascript@0.0.1:
-    resolution: {integrity: sha512-lPyntS4/aS7jpuvOlitZDFifBCb4W8L/3QU0PLbUTUj+zYah8rfVjYic88yG7ZKTxhS5h9iz7duT8oUXKszLhg==}
+  legacy-javascript@0.0.3:
+    resolution: {integrity: sha512-1r6MT4dVaJyXt4G07Cm2cQ0AUaLJdefiEp4SmIAylA++gnEQ82YvmzE58RkM5EP0fk5hROLCslUPGnwIYdZQVA==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -3088,6 +3089,9 @@ packages:
   third-party-web@0.29.2:
     resolution: {integrity: sha512-fegtha91tq2DHphyoiBXVHjVi2YG9zFaRnboT9C28tO1en9Y3wJsfspuy40F+u5wl3hHVbw7cnd1b67kEGHb8g==}
 
+  third-party-web@0.30.0:
+    resolution: {integrity: sha512-p+PfyL5U0ediGzvwPzMSdD9MnC8rHW6nWJJVLIQvqN7RsSqfaZ+7n4c9GILqH36EYR0eXB9CzAeCRnKFr/9uJg==}
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -3587,7 +3591,7 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@craveup/storefront-sdk@2.0.1': {}
+  '@craveup/storefront-sdk@file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz': {}
 
   '@csstools/color-helpers@6.1.0': {}
 
@@ -3968,8 +3972,8 @@ snapshots:
 
   '@paulirish/trace_engine@0.0.65':
     dependencies:
-      legacy-javascript: 0.0.1
-      third-party-web: 0.29.2
+      legacy-javascript: 0.0.3
+      third-party-web: 0.30.0
 
   '@playwright/test@1.62.1':
     dependencies:
@@ -5658,7 +5662,7 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
-  legacy-javascript@0.0.1: {}
+  legacy-javascript@0.0.3: {}
 
   levn@0.4.1:
     dependencies:
@@ -6453,6 +6457,8 @@ snapshots:
   tapable@2.3.3: {}
 
   third-party-web@0.29.2: {}
+
+  third-party-web@0.30.0: {}
 
   tinybench@2.9.0: {}
 

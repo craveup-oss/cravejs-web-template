@@ -55,6 +55,7 @@ export interface StorefrontLoyaltyClient {
       config?: RequestConfig,
     ): Promise<StorefrontCart>;
     ledger(
+      locationId: string,
       params?: { limit?: number; cursor?: string },
       config?: RequestConfig,
     ): Promise<LoyaltyLedger>;
@@ -175,6 +176,7 @@ export type StorefrontLoyaltyCartReconciliationResult = Readonly<
 >;
 
 export interface StorefrontSubmitLoyaltyClaimInput {
+  readonly locationId: string;
   readonly orderId: string;
   readonly reason: LoyaltyClaimReason;
   readonly note?: string;
@@ -197,12 +199,12 @@ export interface StorefrontLoyaltyActions {
     ): Promise<StorefrontLoyaltyCartReconciliationResult>;
   };
   readonly account: {
-    ledger(params?: {
+    ledger(locationId: string, params?: {
       limit?: number;
       cursor?: string;
     }): Promise<StorefrontLoyaltyLedgerResult>;
     readonly claims: {
-      list(): Promise<StorefrontLoyaltyClaimsResult>;
+      list(locationId: string): Promise<StorefrontLoyaltyClaimsResult>;
       submit(
         input: StorefrontSubmitLoyaltyClaimInput,
       ): Promise<StorefrontLoyaltyClaimSubmissionResult>;
@@ -572,13 +574,15 @@ export function createStorefrontLoyaltyActions(
   }
 
   async function ledger(
+    locationId: string,
     params?: { limit?: number; cursor?: string },
   ): Promise<StorefrontLoyaltyLedgerResult> {
+    requireIdentifier(locationId, "INVALID_LOCATION_ID");
     requireLedgerParams(params);
     if (!context.profileEnabled) return disabled("profile-disabled");
 
     try {
-      const response = await authorized(() => client.loyalty.ledger(params));
+      const response = await authorized(() => client.loyalty.ledger(locationId, params));
       if (!response.enabled) return disabled("merchant-disabled");
       return { state: "enabled", blocking: false, ledger: response };
     } catch (error) {
@@ -590,10 +594,10 @@ export function createStorefrontLoyaltyActions(
     }
   }
 
-  async function accountCapability(): Promise<
+  async function accountCapability(locationId: string): Promise<
     DisabledLoyaltyState | UnavailableLoyaltyState | null
   > {
-    const result = await ledger({ limit: 1 });
+    const result = await ledger(locationId, { limit: 1 });
     return result.state === "enabled" ? null : result;
   }
 
@@ -627,8 +631,8 @@ export function createStorefrontLoyaltyActions(
     account: {
       ledger,
       claims: {
-        async list() {
-          const capability = await accountCapability();
+        async list(locationId) {
+          const capability = await accountCapability(locationId);
           if (capability) return capability;
           try {
             const response = await authorized(() =>
@@ -649,7 +653,7 @@ export function createStorefrontLoyaltyActions(
         },
         async submit(input) {
           requireClaim(input);
-          const capability = await accountCapability();
+          const capability = await accountCapability(input.locationId);
           if (capability) return capability;
           try {
             const claim = await authorized(() =>

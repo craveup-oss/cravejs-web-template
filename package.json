@@ -19,7 +19,7 @@
     "verify:sandbox-demo": "node scripts/verify-sandbox-demo.mjs"
   },
   "dependencies": {
-    "@craveup/storefront-sdk": "2.0.1",
+    "@craveup/storefront-sdk": "file:vendor/craveup-storefront-sdk-2.1.0-catalog.0.tgz",
     "@googlemaps/js-api-loader": "^2.1.1",
     "@hookform/resolvers": "^5.7.1",
     "@radix-ui/react-dialog": "^1.1.23",

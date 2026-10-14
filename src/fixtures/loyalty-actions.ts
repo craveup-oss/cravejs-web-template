@@ -112,7 +112,7 @@ export function createFixtureStorefrontLoyaltyActions(
         };
         return currentCart;
       },
-      async ledger(params): Promise<LoyaltyLedger> {
+      async ledger(_locationId, params): Promise<LoyaltyLedger> {
         if (availability === "unavailable") throw unavailableError();
         if (availability === "disabled") return { enabled: false };
 

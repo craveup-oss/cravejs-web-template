@@ -42,6 +42,7 @@ const stateByPublicCode: Readonly<Record<string, StorefrontUiErrorState>> = {
   NOT_FOUND: "unavailable",
   RATE_LIMITED: "rate-limited",
   CART_CONFLICT: "cart-conflict",
+  REQUOTE_REQUIRED: "cart-conflict",
   RESOURCE_CONFLICT: "resource-conflict",
   CART_IMMUTABLE: "cart-immutable",
   IDEMPOTENCY_KEY_REQUIRED: "integration-error",

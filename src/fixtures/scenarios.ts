@@ -1,7 +1,6 @@
 import type {
   LoyaltyLedger,
   LoyaltyQuote,
-  OrderResult,
   StorefrontCart,
 } from "@craveup/storefront-sdk";
 
@@ -22,7 +21,7 @@ const fixtureOrderResultValues = {
   orderPending: { state: "order_pending" },
   completed: { state: "completed", order: fixturePrimaryOrderDetail },
   failed: { state: "failed", code: "PAYMENT_FAILED" },
-} satisfies Record<string, OrderResult>;
+} as const;
 
 const fixtureLoyaltyQuotes = {
   disabled: { enabled: false },

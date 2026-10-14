@@ -12,6 +12,7 @@ const blockedCopy: Record<BlockReason, string> = {
   expired: "Your order has expired. Return to the menu to start a new order.",
   immutable: "This order can no longer be changed or checked out.",
   completed: "This order has already been completed.",
+  "catalog-changed": "The menu changed. Review and accept the changes in your cart before checkout.",
   stale: "Your order changed. Review the refreshed cart before continuing.",
   "authentication-required":
     "Your verified session expired. Verify your number again to continue.",

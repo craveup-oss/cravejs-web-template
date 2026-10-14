@@ -416,13 +416,13 @@ export function useStorefrontCustomer({
 
   const savedPayments = useMemo(
     () => ({
-      list: () =>
+      list: (locationId: string) =>
         withTransport((transport, merchant) =>
-          transport.savedPayments.list(merchant),
+          transport.savedPayments.list(merchant, locationId),
         ),
-      delete: (paymentId: string) =>
+      delete: (locationId: string, paymentId: string) =>
         withTransport((transport, merchant) =>
-          transport.savedPayments.delete(merchant, paymentId),
+          transport.savedPayments.delete(merchant, locationId, paymentId),
         ),
     }),
     [withTransport],

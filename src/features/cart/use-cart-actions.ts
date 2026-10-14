@@ -122,6 +122,10 @@ export function useCartActions(
       }),
     [run],
   );
+  const acceptCatalogChanges = useCallback(
+    () => run({ execute: (coordinator, intentId) => coordinator.acceptCatalogChanges({ intentId }) }),
+    [run],
+  );
   const clear = useCallback(
     () =>
       run({
@@ -179,5 +183,5 @@ export function useCartActions(
     return request;
   }, [initialCart, runtime, state.recovery]);
 
-  return { state, updateItemQuantity, removeItem, clear, retry } as const;
+  return { state, updateItemQuantity, removeItem, clear, retry, acceptCatalogChanges } as const;
 }

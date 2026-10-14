@@ -103,12 +103,14 @@ export const fixturePrimaryOrderDetail = {
     refunded: "0.00",
     netPaid: "26.10",
   },
+  delivery: null,
   deliveryInfo: {
     deliveryAddress: "1 Example Street, Los Angeles, CA 90012",
   },
   roomServiceInfo: null,
   tableServiceInfo: null,
   payment: {
+    provider: "STRIPE",
     cardLast4: "4242",
     walletType: null,
     cardBrand: "Visa",
@@ -160,12 +162,14 @@ export const fixturePartiallyRefundedOrderDetail = {
     refunded: "10.00",
     netPaid: "38.75",
   },
+  delivery: null,
   deliveryInfo: {
     deliveryAddress: "2 Example Avenue, Los Angeles, CA 90013",
   },
   roomServiceInfo: null,
   tableServiceInfo: null,
   payment: {
+    provider: "STRIPE",
     cardLast4: "4242",
     walletType: null,
     cardBrand: "Visa",
@@ -200,6 +204,7 @@ export const fixtureCancelledOrderDetail = {
     refunded: "19.40",
     netPaid: "0.00",
   },
+  delivery: null,
   deliveryInfo: null,
   roomServiceInfo: null,
   tableServiceInfo: null,

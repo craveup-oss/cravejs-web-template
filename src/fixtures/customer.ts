@@ -15,6 +15,7 @@ export const fixtureCustomer = {
   customerName: "Sam",
   lastName: "Lee",
   phoneNumber: "+1 555 000 0000",
+  phoneNumberVerified: false,
 } satisfies StorefrontCustomer;
 
 export const fixtureCustomerChallenge = {

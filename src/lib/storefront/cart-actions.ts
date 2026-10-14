@@ -20,6 +20,7 @@ interface StorefrontCartClient {
       cartId: string,
       config?: RequestConfig,
     ): Promise<StorefrontCart>;
+    acceptCatalogChanges(locationId: string, cartId: string, config?: RequestConfig): Promise<StorefrontCart>;
     addItem(
       locationId: string,
       cartId: string,
@@ -117,6 +118,7 @@ export class StorefrontCartActionError extends Error {
 
 export interface StorefrontCartActions {
   get(input: ReadStorefrontCartInput): Promise<StorefrontCart>;
+  acceptCatalogChanges(input: CartMutationIdentity): Promise<StorefrontCartItemMutationResult>;
   addItem(input: AddStorefrontCartItemInput): Promise<StorefrontAddItemResult>;
   updateItemQuantity(
     input: UpdateStorefrontCartItemQuantityInput,
@@ -205,7 +207,7 @@ export function createStorefrontCartActions(
       return { state: "succeeded", cart: await mutation() };
     } catch (error) {
       const safeError = toStorefrontErrorState(error);
-      if (safeError.code !== "CART_CONFLICT") {
+      if (!["CART_CONFLICT", "REQUOTE_REQUIRED"].includes(safeError.code)) {
         throw new StorefrontCartActionError(safeError);
       }
       try {
@@ -227,6 +229,12 @@ export function createStorefrontCartActions(
       }
     },
 
+    async acceptCatalogChanges(input) {
+      return mutateItem(input, () => client.cart.acceptCatalogChanges(input.locationId, input.cartId, {
+        revision: input.revision, idempotencyKey: input.idempotencyKey,
+      }));
+    },
+
     async addItem(
       input: AddStorefrontCartItemInput,
     ): Promise<StorefrontAddItemResult> {
@@ -245,7 +253,7 @@ export function createStorefrontCartActions(
         return { state: "succeeded", cart } as const;
       } catch (error) {
         const safeError = toStorefrontErrorState(error);
-        if (safeError.code !== "CART_CONFLICT") {
+        if (!["CART_CONFLICT", "REQUOTE_REQUIRED"].includes(safeError.code)) {
           throw new StorefrontCartActionError(safeError);
         }
 
@@ -318,7 +326,7 @@ export function createStorefrontCartActions(
         return { state: "deleted", cart };
       } catch (error) {
         const safeError = toStorefrontErrorState(error);
-        if (safeError.code !== "CART_CONFLICT") {
+        if (!["CART_CONFLICT", "REQUOTE_REQUIRED"].includes(safeError.code)) {
           throw actionError(error);
         }
 

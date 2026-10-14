@@ -13,6 +13,7 @@ export type CheckoutPreflightBaseBlock =
   | "expired"
   | "immutable"
   | "completed"
+  | "catalog-changed"
   | "stale"
   | "authentication-required";
 
@@ -49,6 +50,7 @@ function baseBlockForCart(
   if (cart.status === "EXPIRED") return "expired";
   if (cart.status === "LOCKED") return "immutable";
   if (cart.status === "COMPLETED") return "completed";
+  if (cart.catalogRevalidation?.required) return "catalog-changed";
   if (cart.items.length === 0 || cart.totalQuantity === 0) return "empty";
   return null;
 }
@@ -145,6 +147,11 @@ export async function runCheckoutPreflight<Reason extends string>(
       : { state: "ready", cart: validated };
   } catch (error) {
     const safe = toStorefrontErrorState(error);
+    if (safe.code === "REQUOTE_REQUIRED") {
+      const refreshed = await client.cart.get(input.locationId, input.cartId);
+      const block = baseBlockForCart(refreshed, input.locationId, input.cartId);
+      return { state: "blocked", reason: block ?? "catalog-changed", cart: refreshed };
+    }
     if (safe.code === "CART_CONFLICT") {
       return { state: "blocked", reason: "stale", cart };
     }

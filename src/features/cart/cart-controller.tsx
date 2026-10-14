@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { getCartMessages } from "@/content/cart";
 import type { FulfillmentDescription } from "@/features/fulfillment/types";
 
+import { CatalogChangeReview } from "./catalog-change-review";
 import { CartPage } from "./cart-page";
 import type { CartActionRuntime } from "./cart-runtime";
 import { createCartPageView, type CartViewLocation } from "./cart-view";
@@ -43,10 +44,11 @@ function ScopedCartController({
 
   return (
     <>
+      <CatalogChangeReview cart={actions.state.cart} locale={locale} pending={actions.state.pending || Boolean(actions.state.recovery)} onAccept={() => void actions.acceptCatalogChanges()} />
       <CartPage
         cart={cart}
         browseHref={browseHref}
-        checkoutHref={checkoutHref}
+        checkoutHref={actions.state.cart.catalogRevalidation?.required || actions.state.pending || actions.state.recovery ? undefined : checkoutHref}
         pending={actions.state.pending}
         pendingItemId={actions.state.pendingItemId}
         onClear={actions.clear}
