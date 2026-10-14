@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { StorefrontCart } from "@craveup/storefront-sdk";
 import { fixturePickupCart } from "@/fixtures/cart";
+import { CartController } from "./cart-controller";
+const loader = vi.hoisted(() => ({ load: vi.fn() }));
+vi.mock("./cart-runtime", () => ({ loadCartMutationCoordinator: loader.load }));
 import { CatalogChangeReview } from "./catalog-change-review";
 import { createCartMutationCoordinator } from "./cart-mutation-coordinator";
 import { createStorefrontCartActions, StorefrontCartActionError, type StorefrontCartActions } from "@/lib/storefront/cart-actions";
@@ -24,6 +27,16 @@ function actions(accept: StorefrontCartActions["acceptCatalogChanges"]): Storefr
 const accepted = () => ({ ...changedCart(), revision: 2, catalogRevalidation: null });
 
 describe("catalog change consent", () => {
+  it("keeps other cart writes disabled while an acceptance response is uncertain", async () => {
+    const accept = vi.fn().mockRejectedValue(new StorefrontCartActionError({ state: "network-error", code: "NETWORK_ERROR", message: "Disconnected" }));
+    loader.load.mockResolvedValue(createCartMutationCoordinator({ actions: actions(accept), initialCart: changedCart(), createIdempotencyKey: () => "accept-catalog-key-123" }));
+    render(<CartController initialCart={changedCart()} runtime={{ mode: "live", merchantSlug: "test" }} locale="en-US" location={{ name: "Test" }} browseHref="/location" />);
+    fireEvent.click(screen.getByRole("button", { name: "Accept changes" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Retry cart update" })).toBeVisible());
+    expect(screen.getByRole("button", { name: "Clear" })).toBeDisabled();
+    expect(screen.getAllByRole("button", { name: "Remove" }).every((button) => button.hasAttribute("disabled"))).toBe(true);
+  });
+
   it("shows authoritative old/new prices and never accepts on render", () => {
     const onAccept = vi.fn(); render(<CatalogChangeReview cart={changedCart()} locale="en-US" pending={false} onAccept={onAccept} />);
     expect(screen.getByText(/\$13.00 → \$14.00/)).toBeVisible(); expect(onAccept).not.toHaveBeenCalled();

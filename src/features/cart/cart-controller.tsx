@@ -49,7 +49,7 @@ function ScopedCartController({
         cart={cart}
         browseHref={browseHref}
         checkoutHref={actions.state.cart.catalogRevalidation?.required || actions.state.pending || actions.state.recovery ? undefined : checkoutHref}
-        pending={actions.state.pending}
+        pending={actions.state.pending || actions.state.recovery === "lost-response"}
         pendingItemId={actions.state.pendingItemId}
         onClear={actions.clear}
         onQuantityChange={actions.updateItemQuantity}
