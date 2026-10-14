@@ -840,3 +840,22 @@
   :global(html[data-storefront-preset="bakery-editorial"]) .lineActions { gap: 12px; flex-wrap: wrap; }
   :global(html[data-storefront-preset="bakery-editorial"]) .summaryColumn { margin-top: 0; padding: 20px; }
 }
+
+
+.catalogReview {
+  display: grid;
+  gap: var(--space-3);
+  margin-block: var(--space-4);
+  padding: var(--space-4);
+  border: var(--stroke-width) solid var(--color-border-default, #d8cbbb);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.catalogReview h2 { margin: 0; font-size: var(--text-title-sm, 22px); line-height: 1.2; }
+.catalogReview p { margin: 0; }
+.catalogReview ul { margin: 0; padding-inline-start: var(--space-4); }
+.catalogReview :global(.primary-button) { max-width: 100%; }

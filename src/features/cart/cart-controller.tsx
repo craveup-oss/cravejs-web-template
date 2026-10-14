@@ -44,8 +44,8 @@ function ScopedCartController({
 
   return (
     <>
-      <CatalogChangeReview cart={actions.state.cart} locale={locale} pending={actions.state.pending || Boolean(actions.state.recovery)} onAccept={() => void actions.acceptCatalogChanges()} />
       <CartPage
+        review={<CatalogChangeReview cart={actions.state.cart} locale={locale} pending={actions.state.pending || Boolean(actions.state.recovery)} onAccept={() => void actions.acceptCatalogChanges()} />}
         cart={cart}
         browseHref={browseHref}
         checkoutHref={actions.state.cart.catalogRevalidation?.required || actions.state.pending || actions.state.recovery ? undefined : checkoutHref}

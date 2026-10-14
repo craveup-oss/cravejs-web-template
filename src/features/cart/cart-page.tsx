@@ -1,7 +1,7 @@
 "use client";
 
 import type { LinkProps } from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { StorefrontFooter } from "@/components/shell/storefront-footer";
 
@@ -59,6 +59,7 @@ export interface CartPageView {
 
 export interface CartPageProps {
   cart: CartPageView;
+  review?: ReactNode;
   browseHref: string;
   checkoutHref?: string;
   pendingItemId?: string;
@@ -161,6 +162,7 @@ function TablesideContext({ context }: { context: TablesideCartContextView }) {
 }
 
 export function CartPage({
+  review,
   cart,
   browseHref,
   checkoutHref,
@@ -223,6 +225,7 @@ export function CartPage({
                   </button>
                 </div>
               )}
+            {review}
             <section aria-label={cart.itemsRegionLabel} className={styles.lines}>
               {cart.items.map((item, index) => (
                 <CartLine

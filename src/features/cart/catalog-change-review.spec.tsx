@@ -27,6 +27,14 @@ function actions(accept: StorefrontCartActions["acceptCatalogChanges"]): Storefr
 const accepted = () => ({ ...changedCart(), revision: 2, catalogRevalidation: null });
 
 describe("catalog change consent", () => {
+  it("summarizes repeated menu revision evidence once without removing consent checks", () => {
+    const cart = changedCart();
+    for (let index = 0; index < 3; index++) cart.catalogRevalidation!.changeSet!.changes.push({ reason: "POLICY_CHANGED", cartItemId: null, canonicalEntityId: null, path: `revision.${index}`, before: 1, after: 2, permittedActions: ["ACCEPT_CHANGES"] });
+    render(<CatalogChangeReview cart={cart} locale="en-US" pending={false} onAccept={vi.fn()} />);
+    expect(screen.getAllByText("The menu was updated")).toHaveLength(1);
+    expect(screen.getByText(/\$13.00 → \$14.00/)).toBeVisible();
+  });
+
   it("keeps other cart writes disabled while an acceptance response is uncertain", async () => {
     const accept = vi.fn().mockRejectedValue(new StorefrontCartActionError({ state: "network-error", code: "NETWORK_ERROR", message: "Disconnected" }));
     loader.load.mockResolvedValue(createCartMutationCoordinator({ actions: actions(accept), initialCart: changedCart(), createIdempotencyKey: () => "accept-catalog-key-123" }));
