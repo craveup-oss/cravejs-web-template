@@ -42,8 +42,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children, overlay }: { children: React.ReactNode; overlay: React.ReactNode }) {
   const runtime = await readRequestStorefrontRuntime();
-  const paymentKey = process.env['STRIPE_SECRET_KEY'] ?? '';
-  const paymentMode = paymentKey.startsWith('sk_test_') ? 'test' : paymentKey.startsWith('sk_live_') ? 'live' : undefined;
+  const environment = process.env;
+  const paymentKey = environment.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '';
+  const paymentMode = paymentKey.startsWith('pk_test_') ? 'test' : paymentKey.startsWith('pk_live_') ? 'live' : undefined;
   const locale = getStorefrontLocalePresentation(
     runtime?.config.locale ?? "en",
   );
