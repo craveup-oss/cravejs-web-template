@@ -186,6 +186,20 @@ function mapClientStateError(
 }
 
 export function toStorefrontErrorState(error: unknown): StorefrontErrorState {
+  // Fetch can reject before an HTTP response exists. The mutation may already
+  // have committed, so retain its idempotency key for the existing replay path.
+  if (
+    error instanceof TypeError &&
+    /^(?:Failed to fetch|Load failed|NetworkError when attempting to fetch resource\.?)$/.test(
+      error.message,
+    )
+  ) {
+    return {
+      state: "network-error",
+      code: "NETWORK_ERROR",
+      message: "We could not confirm the update. Try again to check the same request.",
+    };
+  }
   if (error instanceof StorefrontApiError) {
     const code = sanitizeCode(error.code);
     const requestId = sanitizeRequestId(error.requestId);
