@@ -1,4 +1,4 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, act } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { SWRConfig } from "swr";
 import { LiveCartPage } from "./live-cart-page";
@@ -22,4 +22,20 @@ it("rejects a mismatched location", async () => {
 });
 it("does not turn a failed read into empty", async () => {
   f.read.mockRejectedValue(new Error("unavailable")); mount(); await screen.findByRole("alert"); expect(screen.queryByText("Empty cart")).toBeNull();
+});
+it("hides the previous cart when returning after the active session changed", async () => {
+  const cache = new Map();
+  const view = () => <SWRConfig value={{ provider: () => cache, dedupingInterval: 0 }}><LiveCartPage {...props} /></SWRConfig>;
+  const first = render(view());
+  await screen.findByText("Saved cart cart-a");
+  first.unmount();
+  f.session.mockResolvedValue({ cartId: "cart-b" });
+  let resolveCart!: (cart: { id: string; locationId: string }) => void;
+  f.read.mockReturnValue(new Promise(resolve => { resolveCart = resolve; }));
+  render(view());
+  await screen.findByText("Loading your cart…");
+  expect(screen.queryByText("Saved cart cart-a")).toBeNull();
+  await act(async () => { resolveCart({ id: "cart-b", locationId: "location-a" }); });
+  await screen.findByText("Saved cart cart-b");
+  expect(screen.queryByText("Saved cart cart-a")).toBeNull();
 });

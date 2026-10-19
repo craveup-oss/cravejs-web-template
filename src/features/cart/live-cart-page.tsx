@@ -18,7 +18,7 @@ export function LiveCartPage({ merchantSlug, locationId, locale, location }: {
   const browseHref = `/${encodeURIComponent(locationId)}`;
   const resource = useActiveCart({ merchantSlug, locationId });
 
-  if (resource.isLoading) return <main className="catalog-state" role="status">Loading your cart…</main>;
+  if (resource.isLoading || resource.isValidating) return <main className="catalog-state" role="status">Loading your cart…</main>;
   if (resource.error) return <main className="catalog-state">
     <h1>Cart unavailable</h1>
     <p role="alert">We couldn’t load your saved cart. Try again or return to the menu.</p>

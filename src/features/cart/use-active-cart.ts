@@ -28,6 +28,6 @@ export function useActiveCart({ merchantSlug, locationId, mode = "live" }: {
       throw new Error("Cart scope mismatch");
     }
     return cart;
-  }, { revalidateOnFocus: false, shouldRetryOnError: false });
+  }, { revalidateOnMount: true, revalidateOnFocus: false, shouldRetryOnError: false });
   return resource;
 }
