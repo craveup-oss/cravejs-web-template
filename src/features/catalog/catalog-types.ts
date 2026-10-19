@@ -2,7 +2,8 @@ export type StoreHomeVariant =
   | "home"
   | "category-scroll"
   | "menu-categories"
-  | "full-menu";
+  | "full-menu"
+  | "menu-first";
 
 export type CatalogAvailability = "available" | "unavailable";
 

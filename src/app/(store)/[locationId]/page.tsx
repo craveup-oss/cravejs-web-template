@@ -66,7 +66,7 @@ export default async function StorePage({ params, searchParams }: StorePageProps
   const query = await searchParams;
   const queryParam = query.q;
   const initialQuery = Array.isArray(queryParam) ? queryParam[0] : queryParam;
-  const variant = resolveStoreVariant(locationId, query.variant);
+  const variant = fixtureRuntime ? resolveStoreVariant(locationId, query.variant) : "menu-first";
   const intent = resolveEntryIntent(query);
 
   let outcome: { data: StoreHomeData } | { error: "error" | "rate-limited" };

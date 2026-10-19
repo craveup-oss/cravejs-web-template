@@ -11,7 +11,7 @@ import { readRequestStorefrontRuntime } from "@/lib/tenant/server-storefront-run
 
 export default async function Home() {
   const runtime = await readRequestStorefrontRuntime();
-  if (runtime?.mode === "live" && runtime.defaultLocationId) {
+  if (runtime?.mode === "live") {
     const directory = await getStorefrontServerStoreDirectory();
     let merchant;
     try {
@@ -33,10 +33,11 @@ export default async function Home() {
     if (!merchant || merchant.locations.length === 0) {
       return <StorefrontNotOpen retryHref="/" />;
     }
-    if (!merchant.locations.some((location) => location.id === runtime.defaultLocationId)) {
+    if (runtime.defaultLocationId && !merchant.locations.some((location) => location.id === runtime.defaultLocationId)) {
       notFound();
     }
-    return redirect(`/${encodeURIComponent(runtime.defaultLocationId)}`);
+    const locationId = runtime.defaultLocationId ?? (merchant.locations.length === 1 ? merchant.locations[0].id : undefined);
+    return redirect(locationId ? `/${encodeURIComponent(locationId)}` : "/stores");
   }
   redirect(runtime?.mode === "fixture" ? "/demo" : "/stores");
 }

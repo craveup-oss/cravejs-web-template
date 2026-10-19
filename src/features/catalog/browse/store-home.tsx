@@ -387,6 +387,7 @@ export function StoreHome({
   visualPreset,
 }: StoreHomeProps) {
   const isHome = variant === "home";
+  const isMenuFirst = variant === "menu-first";
   const isBakery = isHome && visualPreset?.id === "bakery-editorial";
   const supportsOrdering = variant !== "menu-categories";
   const navigationItems = [
@@ -395,6 +396,7 @@ export function StoreHome({
       ? [{ id: "store-details", label: isBakery ? "Our bakery" : "Store details", href: isBakery ? `/${encodeURIComponent(data.location.id)}/about` : "#store-details" }]
       : []),
   ];
+  if (isMenuFirst) navigationItems.push({ id: "locations", label: "Locations", href: "/stores" });
   if (isBakery) navigationItems.push({ id: "visit", label: "Visit", href: "/stores" });
   const rail = !isBakery && supportsOrdering && data.orderRail ? <OrderRail order={data.orderRail} /> : undefined;
   const cartLabel = isBakery ? `Bag${data.orderRail ? ` (${data.orderRail.itemCountLabel})` : ""}` : data.orderRail
@@ -417,11 +419,11 @@ export function StoreHome({
             cartLabel={cartLabel}
             cartHref={`/${encodeURIComponent(data.location.id)}/cart`}
           />
-          {isBakery ? fulfillmentSlot ?? <div className="bakery-fulfillment-bar">
+          {isBakery || isMenuFirst ? fulfillmentSlot ?? <div className="bakery-fulfillment-bar">
             <span>Choose pickup or delivery</span>
             <Link href={fulfillmentRoutes.mode(data.location.id)}>Select option <span aria-hidden="true">→</span></Link>
           </div> : null}
-          {isHome ? entryContextSlot : null}
+          {isHome || isMenuFirst ? entryContextSlot : null}
           {variant === "menu-categories" && data.location.sessionContextLabel ? (
             <div className="service-session-bar">
               <span>{data.location.sessionContextLabel}</span>
@@ -432,7 +434,7 @@ export function StoreHome({
           ) : null}
         </>
       }
-      footer={isBakery ? <><section className="bakery-story bakery-home-copy" aria-labelledby="bakery-story-title"><div className="bakery-story-photo"><Image src={visualPreset.heroImageSrc} alt="Freshly baked pastries and rustic bread" fill sizes="(min-width: 700px) 50vw, 100vw" /></div><div className="bakery-story-copy"><p className="bakery-eyebrow">OUR DAILY RITUAL</p><h2 id="bakery-story-title">Good things<br />take their time.</h2><p>A little patience. A lot of care.<br />Made for your everyday.</p><Link href={`/${encodeURIComponent(data.location.id)}/about`}>Meet the bakery <span aria-hidden="true">→</span></Link></div></section><StorefrontFooter brand={data.location.name} menuHref={`/${encodeURIComponent(data.location.id)}`} /></> : undefined}
+      footer={isMenuFirst ? <StorefrontFooter brand={data.location.name} menuHref={`/${encodeURIComponent(data.location.id)}`} editorial={false} /> : isBakery ? <><section className="bakery-story bakery-home-copy" aria-labelledby="bakery-story-title"><div className="bakery-story-photo"><Image src={visualPreset.heroImageSrc} alt="Freshly baked pastries and rustic bread" fill sizes="(min-width: 700px) 50vw, 100vw" /></div><div className="bakery-story-copy"><p className="bakery-eyebrow">OUR DAILY RITUAL</p><h2 id="bakery-story-title">Good things<br />take their time.</h2><p>A little patience. A lot of care.<br />Made for your everyday.</p><Link href={`/${encodeURIComponent(data.location.id)}/about`}>Meet the bakery <span aria-hidden="true">→</span></Link></div></section><StorefrontFooter brand={data.location.name} menuHref={`/${encodeURIComponent(data.location.id)}`} /></> : undefined}
       hero={
         isHome ? (
           visualPreset ? (
@@ -451,7 +453,7 @@ export function StoreHome({
         variant === "menu-categories" ? undefined : (
           <CategoryNavigation
             categories={data.categories}
-            includeFeatured={!isBakery}
+            includeFeatured={!isBakery && !isMenuFirst}
           />
         )
       }
@@ -467,6 +469,7 @@ export function StoreHome({
       visualPresetId={visualPreset?.id}
     >
       <div className="catalog-column" id="menu">
+        {isMenuFirst ? <header className="catalog-section-header"><div><h1>Our menu</h1></div></header> : null}
         {variant === "category-scroll" || variant === "full-menu" ? (
           <h1 className="sr-only">{data.location.name}</h1>
         ) : null}
@@ -474,7 +477,7 @@ export function StoreHome({
         {isBakery ? <><div className="bakery-menu-kicker bakery-home-copy"><span>PASTRIES, BREAD &amp; EVERYDAY RITUALS</span><span aria-hidden="true" /><span>CRAVE.JS / BAKERY EDITORIAL</span></div><div className="bakery-menu-heading"><h2 className="bakery-home-copy">Fresh from the oven</h2>{searchSlot}</div></> : supportsOrdering ? searchSlot : null}
         <div className="store-home-browse-content">
           {data.categories.length || data.menuCategories.length ? (
-            isBakery ? <>
+            isMenuFirst ? <CategorySections categories={data.categories} /> : isBakery ? <>
               <CategoryChips categories={data.categories} includeFeatured={false} />
               <CategorySections categories={data.categories} />
             </> : <BrowseContent data={data} variant={variant} />

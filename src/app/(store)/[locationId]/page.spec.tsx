@@ -64,6 +64,7 @@ describe("API-backed bakery route", () => {
     const home = Children.toArray(page.props.children).find((child) => isValidElement(child) && child.type === StoreHome);
     if (!isValidElement<Parameters<typeof StoreHome>[0]>(home)) throw new Error("Missing storefront");
     expect(home.props.visualPreset?.id).toBe("bakery-editorial");
+    expect(home.props.variant).toBe("menu-first");
     expect(home.props.data.categories[0].items[0].href).toMatch(/^\/demo\/items\//);
     expect(home.props.data.categories[0].items[0].href).not.toContain("#category-pastries");
   });

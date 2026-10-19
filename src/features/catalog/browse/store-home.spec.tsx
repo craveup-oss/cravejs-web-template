@@ -197,3 +197,18 @@ describe("StoreHome", () => {
     )).toBe(true);
   });
 });
+
+it("puts the complete menu and fulfillment ahead of demo marketing for menu-first entry", async () => {
+  const data = await loadStoreHomeData("demo", fixtureCatalogSource);
+  const { container } = render(<StoreHome data={data} variant="menu-first" visualPreset={resolveStorefrontPreset("bakery-editorial")} fulfillmentSlot={<div>Pickup or delivery</div>} entryContextSlot={<div>Entry context</div>} />);
+  expect(screen.getByRole("heading", { level: 1, name: "Our menu" })).toBeInTheDocument();
+  expect(screen.getByText("Pickup or delivery")).toBeInTheDocument();
+  expect(screen.getByText("Entry context")).toBeInTheDocument();
+  expect(container.querySelector(".storefront-preset-hero")).toBeNull();
+  expect(container.querySelector(".bakery-story")).toBeNull();
+  expect(screen.queryByText("Fresh from the oven")).not.toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: "Our bakery" })).not.toBeInTheDocument();
+  expect(container.querySelectorAll(".menu-item-card")).toHaveLength(data.categories.reduce((n, category) => n + category.items.length, 0));
+  expect(screen.getByRole("link", { name: "Locations" })).toHaveAttribute("href", "/stores");
+  expect(container.querySelector('a[href="#most-ordered"]')).toBeNull();
+});
