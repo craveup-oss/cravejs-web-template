@@ -9,3 +9,5 @@ Reused owners: root directory lookup and tenant validation, StoreHome, CategoryS
 Validation: 116 component/route tests and 23 release-verifier tests pass; lint, type checking and production build pass. Hosted verification follows the exact image rollout and is recorded in the Console storefront image/entry report.
 
 Hosted visual verification exposed an existing selector conflict: item-sheet enabled actions used the pale inverse-surface token after the bakery primary-button rule. The bakery rule now matches enabled buttons explicitly, so the preset action color wins without overriding disabled state. Lint, typecheck, all116 component tests plus23 release-verifier tests, and production build pass. Final hosted contrast verification follows the corrected image deployment.
+
+Aside also found fictional bakery links/taglines on secondary pages. The shared footer now defaults to neutral navigation; only the explicit bakery home fixture opts into editorial copy. Repeated lint/typecheck,116 component tests,23 release-verifier tests and production build passed after this change.
