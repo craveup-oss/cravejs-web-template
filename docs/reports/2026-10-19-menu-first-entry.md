@@ -7,3 +7,5 @@ Live location pages in both hosted and standalone profiles now use the existing 
 Reused owners: root directory lookup and tenant validation, StoreHome, CategorySections, fulfillment status, shared footer and existing menu card. No alternate catalog, cart or transport path was added. Removed behavior: unconditional hosted one-location chooser and default editorial hero/story on live ordering pages.
 
 Validation: 116 component/route tests and 23 release-verifier tests pass; lint, type checking and production build pass. Hosted verification follows the exact image rollout and is recorded in the Console storefront image/entry report.
+
+Hosted visual verification exposed an existing selector conflict: item-sheet enabled actions used the pale inverse-surface token after the bakery primary-button rule. The bakery rule now matches enabled buttons explicitly, so the preset action color wins without overriding disabled state. Lint, typecheck, all116 component tests plus23 release-verifier tests, and production build pass. Final hosted contrast verification follows the corrected image deployment.

@@ -74,15 +74,15 @@ html[data-storefront-preset="bakery-editorial"] input[type="checkbox"] {
   min-height: auto;
   accent-color: #704c34;
 }
-html[data-storefront-preset="bakery-editorial"] .primary-button,
-.storefront-shell[data-preset="bakery-editorial"] .primary-button {
+html[data-storefront-preset="bakery-editorial"] .primary-button:not(:disabled),
+.storefront-shell[data-preset="bakery-editorial"] .primary-button:not(:disabled) {
   background: #704c34;
   color: #fffaf3;
   border-radius: 3px;
   min-height: 50px;
 }
-html[data-storefront-preset="bakery-editorial"] .primary-button:hover,
-.storefront-shell[data-preset="bakery-editorial"] .primary-button:hover {
+html[data-storefront-preset="bakery-editorial"] .primary-button:not(:disabled):hover,
+.storefront-shell[data-preset="bakery-editorial"] .primary-button:not(:disabled):hover {
   background: #523622;
 }
 html[data-storefront-preset="bakery-editorial"] :focus-visible {
