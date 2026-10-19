@@ -25,14 +25,14 @@ it("does not turn a failed read into empty", async () => {
 });
 it("hides the previous cart when returning after the active session changed", async () => {
   const cache = new Map();
-  const view = () => <SWRConfig value={{ provider: () => cache, dedupingInterval: 0 }}><LiveCartPage {...props} /></SWRConfig>;
+  const view = (show = true) => <SWRConfig value={{ provider: () => cache }}>{show && <LiveCartPage {...props} />}</SWRConfig>;
   const first = render(view());
   await screen.findByText("Saved cart cart-a");
-  first.unmount();
+  first.rerender(view(false));
   f.session.mockResolvedValue({ cartId: "cart-b" });
   let resolveCart!: (cart: { id: string; locationId: string }) => void;
   f.read.mockReturnValue(new Promise(resolve => { resolveCart = resolve; }));
-  render(view());
+  first.rerender(view());
   await screen.findByText("Loading your cart…");
   expect(screen.queryByText("Saved cart cart-a")).toBeNull();
   await act(async () => { resolveCart({ id: "cart-b", locationId: "location-a" }); });

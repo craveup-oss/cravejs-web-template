@@ -11,6 +11,8 @@ export function useActiveCart({ merchantSlug, locationId, mode = "live" }: {
   merchantSlug: string; locationId: string; mode?: "fixture" | "live";
 }) {
   const apiOrigin = useStorefrontApiOrigin();
+  // Clearing or submitting a cart can replace its session between route mounts.
+  // A recently completed request may therefore belong to the previous cart.
   const resource = useSWR(["active-cart", mode, apiOrigin, merchantSlug, locationId], async () => {
     const sessionStore = createMerchantCartSessionStore(merchantSlug);
     const session = await sessionStore.get(locationId);
@@ -28,6 +30,6 @@ export function useActiveCart({ merchantSlug, locationId, mode = "live" }: {
       throw new Error("Cart scope mismatch");
     }
     return cart;
-  }, { revalidateOnMount: true, revalidateOnFocus: false, shouldRetryOnError: false });
+  }, { dedupingInterval: 0, revalidateOnMount: true, revalidateOnFocus: false, shouldRetryOnError: false });
   return resource;
 }
